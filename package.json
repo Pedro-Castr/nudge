@@ -26,7 +26,8 @@
     "dotenv-expand": "^1000.0.0",
     "node-pg-migrate": "^9.0.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
