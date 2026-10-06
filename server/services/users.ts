@@ -3,7 +3,16 @@ import password from "../services/password";
 import usersRepository from "../repositories/users";
 import { ValidationError } from "../../infra/errors/errors";
 
-type UserProps = {
+export type UserOptions = {
+  id?: string;
+  nome: string;
+  email: string;
+  senha: string;
+  created_at?: Date;
+  updated_at?: Date;
+};
+
+type UpdateUserOptions = {
   id: string;
   nome: string;
   email: string;
@@ -12,7 +21,7 @@ type UserProps = {
   updated_at: Date;
 };
 
-async function create(userInputValues: UserProps) {
+async function create(userInputValues: UserOptions) {
   await validadeUniqueName(userInputValues.nome);
   await validadeUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
@@ -20,7 +29,7 @@ async function create(userInputValues: UserProps) {
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
 
-  async function runInsertQuery(userInputValues: UserProps) {
+  async function runInsertQuery(userInputValues: UserOptions) {
     const results = await database.query({
       text: `
       INSERT INTO
@@ -28,7 +37,7 @@ async function create(userInputValues: UserProps) {
       VALUES
         ($1, $2, $3)
       RETURNING
-        id, nome, email, created_at, updated_at
+        *
       ;`,
       values: [
         userInputValues.nome,
@@ -41,7 +50,7 @@ async function create(userInputValues: UserProps) {
   }
 }
 
-async function update(nome: string, userInputValues: UserProps) {
+async function update(nome: string, userInputValues: UserOptions) {
   const currentUser = await usersRepository.findOneByName(nome);
 
   if ("nome" in userInputValues) {
@@ -61,7 +70,7 @@ async function update(nome: string, userInputValues: UserProps) {
   const updatedUser = await runUpdateQuery(userWithNewValues);
   return updatedUser;
 
-  async function runUpdateQuery(userWithNewValues: UserProps) {
+  async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
     const results = await database.query({
       text: `
       UPDATE
@@ -74,7 +83,7 @@ async function update(nome: string, userInputValues: UserProps) {
       WHERE
         id = $1
       RETURNING
-        id, nome, email, created_at, updated_at
+        *
       ;`,
       values: [
         userWithNewValues.id,
@@ -103,8 +112,8 @@ async function validadeUniqueName(username: string) {
 
   if (results.rowCount && results.rowCount > 0) {
     throw new ValidationError({
-      message: "O username informado já está sendo utilizado.",
-      action: "Utilize outro username para realizar esta operação.",
+      message: "O nome informado já está sendo utilizado.",
+      action: "Utilize outro nome para realizar esta operação.",
     });
   }
 }
@@ -130,7 +139,7 @@ async function validadeUniqueEmail(email: string) {
   }
 }
 
-async function hashPasswordInObject(userInputValues: UserProps) {
+async function hashPasswordInObject(userInputValues: UserOptions) {
   const hashedPassword = await password.hash(userInputValues.senha);
   userInputValues.senha = hashedPassword;
 }
