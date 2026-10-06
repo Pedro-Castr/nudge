@@ -7,19 +7,39 @@ function runVite() {
 
   const express = spawn("npm", ["run", "services:run:express"], {
     stdio: "inherit",
+    detached: true,
   });
 
   const vite = spawn("npx", ["vite", "dev"], {
     stdio: "inherit",
+    detached: true,
   });
 
-  process.on("SIGINT", () => {
-    execSync("npm run services:down", { stdio: "inherit" });
+  let encerrando = false;
 
-    express.kill("SIGINT");
-    vite.kill("SIGINT");
+  function encerrar() {
+    if (encerrando) return;
+    encerrando = true;
+
+    for (const proc of [express, vite]) {
+      try {
+        process.kill(-proc.pid, "SIGTERM");
+      } catch {}
+    }
+
+    try {
+      execSync("npm run services:down", { stdio: "inherit" });
+    } catch {}
 
     process.exit();
+  }
+
+  process.on("SIGINT", encerrar);
+  process.on("SIGTERM", encerrar);
+  process.on("SIGHUP", encerrar);
+
+  express.on("exit", (code) => {
+    if (!encerrando && code !== 0) encerrar();
   });
 }
 
