@@ -1,15 +1,7 @@
 import password from "../services/password";
 import usersRepository from "../repositories/users";
 import { ValidationError } from "../../infra/errors/errors";
-
-export type UserOptions = {
-  id?: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at?: Date;
-  updated_at?: Date;
-};
+import { UserOptions } from "../types/users";
 
 async function create(userInputValues: UserOptions) {
   await validadeUniqueEmail(userInputValues.email);

@@ -1,23 +1,6 @@
 import database from "../../infra/connection";
 import { NotFoundError } from "../../infra/errors/errors";
-
-export type UserOptions = {
-  id?: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at?: Date;
-  updated_at?: Date;
-};
-
-type UpdateUserOptions = {
-  id: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at: Date;
-  updated_at: Date;
-};
+import { UserOptions, UpdateUserOptions } from "../types/users";
 
 async function runInsertQuery(userInputValues: UserOptions) {
   const results = await database.query({
