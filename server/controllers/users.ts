@@ -10,6 +10,18 @@ async function create(request: Request, response: Response) {
   return response.status(201).json(newUser);
 }
 
+async function findOneByEmail(
+  request: Request<{ email: string }>,
+  response: Response,
+) {
+  const { email } = request.params;
+
+  const user = await usersService.findOneByEmail(email);
+
+  return response.status(200).json(user);
+}
+
 export default {
   create,
+  findOneByEmail,
 };

@@ -74,12 +74,26 @@ async function hashPasswordInObject(userInputValues: UserOptions) {
   userInputValues.senha = hashedPassword;
 }
 
+async function findOneByName(nome: string) {
+  const user = await usersRepository.findOneByName(nome);
+
+  return user;
+}
+
+async function findOneByEmail(email: string) {
+  const user = await usersRepository.findOneByEmail(email);
+
+  return user;
+}
+
 const usersService = {
   create,
   update,
   validadeUniqueEmail,
   validadeEmptyName,
   validadeEmptyEmail,
+  findOneByName,
+  findOneByEmail,
 };
 
 export default usersService;
