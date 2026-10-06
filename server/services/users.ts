@@ -1,6 +1,6 @@
 import password from "../services/password";
 import usersRepository from "../repositories/users";
-import { ValidationError } from "../../infra/errors/errors";
+import { ValidationError, NotFoundError } from "../../infra/errors/errors";
 import { UserOptions } from "../types/users";
 
 async function create(userInputValues: UserOptions) {
@@ -29,14 +29,19 @@ async function update(nome: string, userInputValues: UserOptions) {
 }
 
 async function validadeUniqueEmail(email: string) {
-  const user = await usersRepository.findOneByEmail(email);
-
-  if (user) {
-    throw new ValidationError({
-      message: "O email informado já está sendo utilizado.",
-      action: "Utilize outro email para realizar esta alteração.",
-    });
+  try {
+    await usersRepository.findOneByEmail(email);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return;
+    }
+    throw error;
   }
+
+  throw new ValidationError({
+    message: "O email informado já está sendo utilizado.",
+    action: "Utilize outro email para realizar esta alteração.",
+  });
 }
 
 async function hashPasswordInObject(userInputValues: UserOptions) {
