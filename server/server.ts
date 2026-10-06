@@ -26,8 +26,6 @@ app.use(
     response: Response,
     next: NextFunction,
   ) => {
-    console.error(error);
-
     if (
       error instanceof Error &&
       "statusCode" in error &&
