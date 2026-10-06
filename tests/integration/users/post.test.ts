@@ -54,6 +54,35 @@ describe("POST api/users", () => {
       expect(incorrectPasswordMatch).toBe(false);
     });
 
+    test("Com 'nome' duplicado", async () => {
+      const response1 = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: "nomeduplicado",
+          email: "nomeduplicado1@nugde.com",
+          senha: "abc123",
+        }),
+      });
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: "nomeduplicado",
+          email: "nomeduplicado2@nugde.com",
+          senha: "abc123",
+        }),
+      });
+
+      expect(response2.status).toBe(201);
+    });
+
     test("Com 'email' duplicado", async () => {
       const response1 = await fetch("http://localhost:3000/api/users", {
         method: "POST",
@@ -87,43 +116,6 @@ describe("POST api/users", () => {
         name: "ValidationError",
         message: "O email informado já está sendo utilizado.",
         action: "Utilize outro email para realizar esta alteração.",
-        status_code: 400,
-      });
-    });
-
-    test("Com 'nome' duplicado", async () => {
-      const response1 = await fetch("http://localhost:3000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nome: "nomeduplicado",
-          email: "nomeduplicado1@nugde.com",
-          senha: "abc123",
-        }),
-      });
-      expect(response1.status).toBe(201);
-
-      const response2 = await fetch("http://localhost:3000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nome: "nomeduplicado",
-          email: "nomeduplicado2@nugde.com",
-          senha: "abc123",
-        }),
-      });
-
-      expect(response2.status).toBe(400);
-
-      const response2Body = await response2.json();
-      expect(response2Body).toEqual({
-        name: "ValidationError",
-        message: "O nome informado já está sendo utilizado.",
-        action: "Utilize outro nome para realizar esta operação.",
         status_code: 400,
       });
     });

@@ -22,7 +22,6 @@ type UpdateUserOptions = {
 };
 
 async function create(userInputValues: UserOptions) {
-  await validadeUniqueName(userInputValues.nome);
   await validadeUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
 
@@ -52,10 +51,6 @@ async function create(userInputValues: UserOptions) {
 
 async function update(nome: string, userInputValues: UserOptions) {
   const currentUser = await usersRepository.findOneByName(nome);
-
-  if ("nome" in userInputValues) {
-    await validadeUniqueName(userInputValues.nome);
-  }
 
   if ("email" in userInputValues) {
     await validadeUniqueEmail(userInputValues.email);
@@ -97,27 +92,6 @@ async function update(nome: string, userInputValues: UserOptions) {
   }
 }
 
-async function validadeUniqueName(username: string) {
-  const results = await database.query({
-    text: `
-      SELECT
-        nome
-      FROM
-        users
-      WHERE
-        LOWER(nome) = LOWER($1)
-      ;`,
-    values: [username],
-  });
-
-  if (results.rowCount && results.rowCount > 0) {
-    throw new ValidationError({
-      message: "O nome informado já está sendo utilizado.",
-      action: "Utilize outro nome para realizar esta operação.",
-    });
-  }
-}
-
 async function validadeUniqueEmail(email: string) {
   const results = await database.query({
     text: `
@@ -147,7 +121,6 @@ async function hashPasswordInObject(userInputValues: UserOptions) {
 const usersService = {
   create,
   update,
-  validadeUniqueName,
   validadeUniqueEmail,
 };
 
