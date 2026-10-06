@@ -4,16 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node src/infra/scripts/wait-for-vite.js",
+    "dev": "node infra/scripts/wait-for-vite.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "services:up": "docker compose -f src/infra/compose.yaml up -d",
-    "services:stop": "docker compose -f src/infra/compose.yaml stop",
-    "services:down": "docker compose -f src/infra/compose.yaml down",
-    "services:wait:database": "node src/infra/scripts/wait-for-postgres.js",
-    "migrations:create": "node-pg-migrate -m src/infra/migrations create",
-    "migrations:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up",
+    "test": "npm run services:run:tests",
+    "test:watch": "vitest --reporter=verbose",
+    "services:up": "docker compose -f infra/compose.yaml up -d",
+    "services:stop": "docker compose -f infra/compose.yaml stop",
+    "services:down": "docker compose -f infra/compose.yaml down",
+    "services:wait:database": "node infra/scripts/wait-for-postgres.js",
+    "services:wait:express": "node infra/scripts/wait-for-express.js",
+    "services:run:express": "node infra/scripts/run-express.js",
+    "services:run:tests": "node infra/scripts/run-tests.js",
+    "migrations:create": "node-pg-migrate -m infra/migrations create",
+    "migrations:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "scan:staged": "gitleaks-secret-scanner",
@@ -22,19 +27,28 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.5",
     "dotenv-expand": "^1000.0.0",
+    "express": "^5.2.1",
     "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@faker-js/faker": "^10.6.0",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.13.3",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "commitizen": "^4.3.2",
+    "concurrently": "^10.0.5",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -45,7 +59,8 @@
     "prettier": "^3.9.9",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "vitest": "^5.0.3"
   },
   "config": {
     "commitizen": {
