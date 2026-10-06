@@ -8,14 +8,15 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "npm run services:up && concurrently -n express,jest --hide express -k -s command-jest \"npm run services:run:express\" \"jest --runInBand --verbose\"",
-    "posttest": "npm run services:stop",
-    "test:watch": "jest --watchAll --runInBand --verbose",
+    "test": "npm run services:run:tests",
+    "test:watch": "vitest --reporter=verbose",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "services:down": "docker compose -f infra/compose.yaml down",
     "services:wait:database": "node infra/scripts/wait-for-postgres.js",
+    "services:wait:express": "node infra/scripts/wait-for-express.js",
     "services:run:express": "node infra/scripts/run-express.js",
+    "services:run:tests": "node infra/scripts/run-tests.js",
     "migrations:create": "node-pg-migrate -m infra/migrations create",
     "migrations:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
     "lint:check": "prettier --check .",
@@ -58,7 +59,8 @@
     "prettier": "^3.9.9",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "vitest": "^5.0.3"
   },
   "config": {
     "commitizen": {
