@@ -1,6 +1,70 @@
 import database from "../../infra/connection";
 import { NotFoundError } from "../../infra/errors/errors";
 
+export type UserOptions = {
+  id?: string;
+  nome: string;
+  email: string;
+  senha: string;
+  created_at?: Date;
+  updated_at?: Date;
+};
+
+type UpdateUserOptions = {
+  id: string;
+  nome: string;
+  email: string;
+  senha: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+async function runInsertQuery(userInputValues: UserOptions) {
+  const results = await database.query({
+    text: `
+      INSERT INTO
+        users (nome, email, senha)
+      VALUES
+        ($1, $2, $3)
+      RETURNING
+        *
+      ;`,
+    values: [
+      userInputValues.nome,
+      userInputValues.email,
+      userInputValues.senha,
+    ],
+  });
+
+  return results.rows[0];
+}
+
+async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
+  const results = await database.query({
+    text: `
+      UPDATE
+        users
+      SET
+        username = $2,
+        email = $3,
+        password = $4,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+      ;`,
+    values: [
+      userWithNewValues.id,
+      userWithNewValues.nome,
+      userWithNewValues.email,
+      userWithNewValues.senha,
+    ],
+  });
+
+  return results.rows[0];
+}
+
 async function findOneByName(name: string) {
   const userFound = await runSelectQuery(name);
 
@@ -64,6 +128,8 @@ async function findOneByEmail(email: string) {
 }
 
 const usersRepository = {
+  runInsertQuery,
+  runUpdateQuery,
   findOneByName,
   findOneByEmail,
 };

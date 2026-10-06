@@ -1,4 +1,3 @@
-import database from "../../infra/connection";
 import password from "../services/password";
 import usersRepository from "../repositories/users";
 import { ValidationError } from "../../infra/errors/errors";
@@ -12,41 +11,12 @@ export type UserOptions = {
   updated_at?: Date;
 };
 
-type UpdateUserOptions = {
-  id: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at: Date;
-  updated_at: Date;
-};
-
 async function create(userInputValues: UserOptions) {
   await validadeUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
 
-  const newUser = await runInsertQuery(userInputValues);
+  const newUser = await usersRepository.runInsertQuery(userInputValues);
   return newUser;
-
-  async function runInsertQuery(userInputValues: UserOptions) {
-    const results = await database.query({
-      text: `
-      INSERT INTO
-        users (nome, email, senha)
-      VALUES
-        ($1, $2, $3)
-      RETURNING
-        *
-      ;`,
-      values: [
-        userInputValues.nome,
-        userInputValues.email,
-        userInputValues.senha,
-      ],
-    });
-
-    return results.rows[0];
-  }
 }
 
 async function update(nome: string, userInputValues: UserOptions) {
@@ -62,50 +32,14 @@ async function update(nome: string, userInputValues: UserOptions) {
 
   const userWithNewValues = { ...currentUser, ...userInputValues };
 
-  const updatedUser = await runUpdateQuery(userWithNewValues);
+  const updatedUser = await usersRepository.runUpdateQuery(userWithNewValues);
   return updatedUser;
-
-  async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
-    const results = await database.query({
-      text: `
-      UPDATE
-        users
-      SET
-        username = $2,
-        email = $3,
-        password = $4,
-        updated_at = timezone('utc', now())
-      WHERE
-        id = $1
-      RETURNING
-        *
-      ;`,
-      values: [
-        userWithNewValues.id,
-        userWithNewValues.nome,
-        userWithNewValues.email,
-        userWithNewValues.senha,
-      ],
-    });
-
-    return results.rows[0];
-  }
 }
 
 async function validadeUniqueEmail(email: string) {
-  const results = await database.query({
-    text: `
-      SELECT
-        email
-      FROM
-        users
-      WHERE
-        LOWER(email) = LOWER($1)
-      ;`,
-    values: [email],
-  });
+  const user = await usersRepository.findOneByEmail(email);
 
-  if (results.rowCount && results.rowCount > 0) {
+  if (user) {
     throw new ValidationError({
       message: "O email informado já está sendo utilizado.",
       action: "Utilize outro email para realizar esta alteração.",
