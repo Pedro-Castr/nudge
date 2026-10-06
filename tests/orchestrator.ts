@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import database from "../infra/connection";
 import migrator from "../server/services/migrator";
 import user from "../server/services/users";
-import type { UserOptions } from "../server/services/users";
+import type { UserOptions } from "../server/types/users";
 
 async function clearDatabase() {
   await database.query({

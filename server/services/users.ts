@@ -1,64 +1,28 @@
-import database from "../../infra/connection";
 import password from "../services/password";
 import usersRepository from "../repositories/users";
-import { ValidationError } from "../../infra/errors/errors";
-
-export type UserOptions = {
-  id?: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at?: Date;
-  updated_at?: Date;
-};
-
-type UpdateUserOptions = {
-  id: string;
-  nome: string;
-  email: string;
-  senha: string;
-  created_at: Date;
-  updated_at: Date;
-};
+import { ValidationError, NotFoundError } from "../../infra/errors/errors";
+import { UserOptions } from "../types/users";
 
 async function create(userInputValues: UserOptions) {
-  await validadeUniqueName(userInputValues.nome);
   await validadeUniqueEmail(userInputValues.email);
+  await validadeEmptyName(userInputValues.nome);
+  await validadeEmptyEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
 
-  const newUser = await runInsertQuery(userInputValues);
+  const newUser = await usersRepository.runInsertQuery(userInputValues);
   return newUser;
-
-  async function runInsertQuery(userInputValues: UserOptions) {
-    const results = await database.query({
-      text: `
-      INSERT INTO
-        users (nome, email, senha)
-      VALUES
-        ($1, $2, $3)
-      RETURNING
-        *
-      ;`,
-      values: [
-        userInputValues.nome,
-        userInputValues.email,
-        userInputValues.senha,
-      ],
-    });
-
-    return results.rows[0];
-  }
 }
 
 async function update(nome: string, userInputValues: UserOptions) {
   const currentUser = await usersRepository.findOneByName(nome);
 
   if ("nome" in userInputValues) {
-    await validadeUniqueName(userInputValues.nome);
+    await validadeEmptyName(userInputValues.nome);
   }
 
   if ("email" in userInputValues) {
     await validadeUniqueEmail(userInputValues.email);
+    await validadeEmptyEmail(userInputValues.email);
   }
 
   if ("senha" in userInputValues) {
@@ -67,74 +31,40 @@ async function update(nome: string, userInputValues: UserOptions) {
 
   const userWithNewValues = { ...currentUser, ...userInputValues };
 
-  const updatedUser = await runUpdateQuery(userWithNewValues);
+  const updatedUser = await usersRepository.runUpdateQuery(userWithNewValues);
   return updatedUser;
-
-  async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
-    const results = await database.query({
-      text: `
-      UPDATE
-        users
-      SET
-        username = $2,
-        email = $3,
-        password = $4,
-        updated_at = timezone('utc', now())
-      WHERE
-        id = $1
-      RETURNING
-        *
-      ;`,
-      values: [
-        userWithNewValues.id,
-        userWithNewValues.nome,
-        userWithNewValues.email,
-        userWithNewValues.senha,
-      ],
-    });
-
-    return results.rows[0];
-  }
-}
-
-async function validadeUniqueName(username: string) {
-  const results = await database.query({
-    text: `
-      SELECT
-        nome
-      FROM
-        users
-      WHERE
-        LOWER(nome) = LOWER($1)
-      ;`,
-    values: [username],
-  });
-
-  if (results.rowCount && results.rowCount > 0) {
-    throw new ValidationError({
-      message: "O nome informado já está sendo utilizado.",
-      action: "Utilize outro nome para realizar esta operação.",
-    });
-  }
 }
 
 async function validadeUniqueEmail(email: string) {
-  const results = await database.query({
-    text: `
-      SELECT
-        email
-      FROM
-        users
-      WHERE
-        LOWER(email) = LOWER($1)
-      ;`,
-    values: [email],
-  });
+  try {
+    await usersRepository.findOneByEmail(email);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return;
+    }
+    throw error;
+  }
 
-  if (results.rowCount && results.rowCount > 0) {
+  throw new ValidationError({
+    message: "O email informado já está sendo utilizado.",
+    action: "Utilize outro email para realizar esta alteração.",
+  });
+}
+
+async function validadeEmptyName(name: string) {
+  if (!name || name === "") {
     throw new ValidationError({
-      message: "O email informado já está sendo utilizado.",
-      action: "Utilize outro email para realizar esta alteração.",
+      message: "Nome é um campo obrigatório.",
+      action: "Informe um nome para completar a ação.",
+    });
+  }
+}
+
+async function validadeEmptyEmail(email: string) {
+  if (!email || email === "") {
+    throw new ValidationError({
+      message: "Email é um campo obrigatório.",
+      action: "Informe um email para completar a ação.",
     });
   }
 }
@@ -147,8 +77,9 @@ async function hashPasswordInObject(userInputValues: UserOptions) {
 const usersService = {
   create,
   update,
-  validadeUniqueName,
   validadeUniqueEmail,
+  validadeEmptyName,
+  validadeEmptyEmail,
 };
 
 export default usersService;

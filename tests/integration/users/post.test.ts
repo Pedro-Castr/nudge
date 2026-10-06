@@ -54,6 +54,35 @@ describe("POST api/users", () => {
       expect(incorrectPasswordMatch).toBe(false);
     });
 
+    test("Com 'nome' duplicado", async () => {
+      const response1 = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: "nomeduplicado",
+          email: "nomeduplicado1@nugde.com",
+          senha: "abc123",
+        }),
+      });
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: "nomeduplicado",
+          email: "nomeduplicado2@nugde.com",
+          senha: "abc123",
+        }),
+      });
+
+      expect(response2.status).toBe(201);
+    });
+
     test("Com 'email' duplicado", async () => {
       const response1 = await fetch("http://localhost:3000/api/users", {
         method: "POST",
@@ -91,39 +120,48 @@ describe("POST api/users", () => {
       });
     });
 
-    test("Com 'nome' duplicado", async () => {
-      const response1 = await fetch("http://localhost:3000/api/users", {
+    test("Com 'nome' em branco", async () => {
+      const response = await fetch("http://localhost:3000/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nome: "nomeduplicado",
-          email: "nomeduplicado1@nugde.com",
+          nome: "",
+          email: "nomeembranco@nugde.com",
           senha: "abc123",
         }),
       });
-      expect(response1.status).toBe(201);
+      expect(response.status).toBe(400);
 
-      const response2 = await fetch("http://localhost:3000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nome: "nomeduplicado",
-          email: "nomeduplicado2@nugde.com",
-          senha: "abc123",
-        }),
-      });
-
-      expect(response2.status).toBe(400);
-
-      const response2Body = await response2.json();
-      expect(response2Body).toEqual({
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
         name: "ValidationError",
-        message: "O nome informado já está sendo utilizado.",
-        action: "Utilize outro nome para realizar esta operação.",
+        message: "Nome é um campo obrigatório.",
+        action: "Informe um nome para completar a ação.",
+        status_code: 400,
+      });
+    });
+
+    test("Com 'email' em branco", async () => {
+      const response = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: "emailembranco",
+          email: "",
+          senha: "abc123",
+        }),
+      });
+      expect(response.status).toBe(400);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ValidationError",
+        message: "Email é um campo obrigatório.",
+        action: "Informe um email para completar a ação.",
         status_code: 400,
       });
     });
