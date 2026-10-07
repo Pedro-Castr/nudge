@@ -13,8 +13,8 @@ async function create(userInputValues: UserOptions) {
   return newUser;
 }
 
-async function update(nome: string, userInputValues: UserOptions) {
-  const currentUser = await usersRepository.findOneByName(nome);
+async function update(email: string, userInputValues: UserOptions) {
+  const currentUser = await usersRepository.findOneByEmail(email);
 
   if ("nome" in userInputValues) {
     await validadeEmptyName(userInputValues.nome);

@@ -28,9 +28,9 @@ async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
       UPDATE
         users
       SET
-        username = $2,
+        nome = $2,
         email = $3,
-        password = $4,
+        senha = $4,
         updated_at = timezone('utc', now())
       WHERE
         id = $1
