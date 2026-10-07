@@ -1,0 +1,175 @@
+/* ---------- Painel do formulário ---------- */
+.formSide {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 480px;
+  min-width: 0;
+  padding: 48px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: min(440px, 100%);
+  padding: clamp(20px, 5vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  background: var(--paper);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--mist);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+}
+
+.tabsBtn {
+  flex: 1;
+  min-height: var(--tap);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tabsBtn[aria-pressed="true"] {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(1, 34, 53, 0.18);
+}
+
+.cardHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHead h2 {
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cardHead p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fieldLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  margin: -10px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fieldPassword {
+  position: relative;
+}
+
+.fieldPassword input {
+  padding-right: 84px;
+}
+
+.fieldToggle {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  min-width: 72px;
+  height: var(--tap);
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--link);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fieldHint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.submit {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--blue-deep);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--blue-deeper);
+}
+
+.submit:disabled {
+  cursor: progress;
+}
+
+.terms {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.switchRow button {
+  min-height: var(--tap);
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: underline;
+}

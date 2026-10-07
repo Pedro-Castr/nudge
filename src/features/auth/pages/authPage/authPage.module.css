@@ -1,0 +1,250 @@
+/* ---------- Layout + granulado ---------- */
+.auth {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 100vh;
+  background: var(--page);
+}
+
+.auth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: var(--grain-size) var(--grain-size);
+  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+}
+
+/* ---------- Painel da marca ---------- */
+.brand {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 560px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 48px clamp(24px, 5vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.brand > * {
+  position: relative;
+}
+
+.brandDots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.3) 1.2px,
+    transparent 1.4px
+  );
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(
+    ellipse at 62% 58%,
+    #000 25%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(ellipse at 62% 58%, #000 25%, transparent 72%);
+}
+
+.brandRipples {
+  position: absolute;
+  left: 62%;
+  top: 58%;
+  width: 0;
+  height: 0;
+}
+
+.ripple {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 720px;
+  height: 720px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  animation: nudgeRipple 7.2s ease-out infinite;
+}
+
+.ripple2 {
+  animation-delay: 2.4s;
+}
+
+.ripple3 {
+  animation-delay: 4.8s;
+}
+
+@keyframes nudgeRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.18);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple {
+    animation: none;
+    opacity: 0.18;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.logoWord {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.brandContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brandTitle {
+  max-width: 560px;
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.brandText {
+  max-width: 460px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ---------- Prévia das tarefas ---------- */
+.preview {
+  width: min(420px, 100%);
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.taskHandle {
+  flex: none;
+  fill: #7fa3b5;
+}
+
+.taskRank {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #8db5c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.taskBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.taskTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.taskWhen {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.taskUrgent .taskWhen {
+  color: var(--link);
+  font-weight: 600;
+}
+
+.taskDragging {
+  background: #fff;
+  border-color: var(--blue-deep);
+  transform: translateX(16px) rotate(-1.8deg);
+  box-shadow:
+    0 0 0 2px var(--blue-deep),
+    var(--shadow-lift);
+}
+
+.taskDragging .taskHandle {
+  fill: var(--blue-deep);
+}
+
+.taskDragging .taskRank {
+  background: var(--blue-deep);
+  border-color: var(--blue-deep);
+  color: #fff;
+  font-weight: 700;
+}
+
+.promises {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.promises li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promises li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
