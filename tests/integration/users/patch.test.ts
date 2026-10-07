@@ -9,38 +9,19 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("PATCH api/users/[email]", () => {
+describe("PATCH api/users/[id]", () => {
   describe("Usuário anônimo", () => {
-    test("Com 'email' inexistente", async () => {
-      const response = await fetch(
-        "http://localhost:3000/api/users/emailInexistente",
-        {
-          method: "PATCH",
-        },
-      );
-
-      expect(response.status).toBe(404);
-
-      const responseBody = await response.json();
-      expect(responseBody).toEqual({
-        name: "NotFoundError",
-        message: "O email informado não foi encontrado no sistema.",
-        action: "Verifique se o email está digitado corretamente.",
-        status_code: 404,
-      });
-    });
-
     test("Com 'email' duplicado", async () => {
       await orchestrator.createUser({
         email: "email1@nudge.com",
       });
 
-      await orchestrator.createUser({
+      const createdUser = await orchestrator.createUser({
         email: "email2@nudge.com",
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/users/email2@nudge.com`,
+        `http://localhost:3000/api/users/${createdUser.id}`,
         {
           method: "PATCH",
           headers: {
@@ -67,7 +48,7 @@ describe("PATCH api/users/[email]", () => {
       const createdUser = await orchestrator.createUser({});
 
       const response = await fetch(
-        `http://localhost:3000/api/users/${createdUser.email}`,
+        `http://localhost:3000/api/users/${createdUser.id}`,
         {
           method: "PATCH",
           headers: {
@@ -84,7 +65,7 @@ describe("PATCH api/users/[email]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         nome: "nomeUnico",
-        email: createdUser.email,
+        email: responseBody.email,
         senha: responseBody.senha,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
@@ -101,7 +82,7 @@ describe("PATCH api/users/[email]", () => {
       const createdUser = await orchestrator.createUser({});
 
       const response = await fetch(
-        `http://localhost:3000/api/users/${createdUser.email}`,
+        `http://localhost:3000/api/users/${createdUser.id}`,
         {
           method: "PATCH",
           headers: {
@@ -117,7 +98,7 @@ describe("PATCH api/users/[email]", () => {
       const responseBody = await response.json();
       expect(responseBody).toEqual({
         id: responseBody.id,
-        nome: createdUser.nome,
+        nome: responseBody.nome,
         email: "emailUnico@nudge.com",
         senha: responseBody.senha,
         created_at: responseBody.created_at,
@@ -137,7 +118,7 @@ describe("PATCH api/users/[email]", () => {
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/users/${createdUser.email}`,
+        `http://localhost:3000/api/users/${createdUser.id}`,
         {
           method: "PATCH",
           headers: {
@@ -148,13 +129,14 @@ describe("PATCH api/users/[email]", () => {
           }),
         },
       );
+
       expect(response.status).toBe(200);
 
       const responseBody = await response.json();
       expect(responseBody).toEqual({
         id: responseBody.id,
-        nome: createdUser.nome,
-        email: createdUser.email,
+        nome: responseBody.nome,
+        email: responseBody.email,
         senha: responseBody.senha,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
@@ -166,9 +148,7 @@ describe("PATCH api/users/[email]", () => {
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
 
-      const userInDatabase = await usersRepository.findOneByEmail(
-        createdUser.email,
-      );
+      const userInDatabase = await usersRepository.findOneById(createdUser.id);
 
       const correctPasswordMatch = await password.compare(
         "novaSenha2",

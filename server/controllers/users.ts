@@ -10,36 +10,38 @@ async function create(request: Request, response: Response) {
   return response.status(201).json(newUser);
 }
 
-async function update(request: Request<{ email: string }>, response: Response) {
-  const { email } = request.params;
+async function update(request: Request<{ id: string }>, response: Response) {
+  const { id } = request.params;
   const userInputValues = request.body;
 
-  const updatedUser = await usersService.update(email, userInputValues);
+  const updatedUser = await usersService.update(id, userInputValues);
 
   return response.status(200).json(updatedUser);
 }
 
-async function remove(request: Request<{ email: string }>, response: Response) {
-  const { email } = request.params;
+async function remove(request: Request<{ id: string }>, response: Response) {
+  const { id } = request.params;
 
-  const deletedUser = await usersService.remove(email);
+  const deletedUser = await usersService.remove(id);
   return response.status(204).json(deletedUser);
 }
 
-async function findOneByEmail(
-  request: Request<{ email: string }>,
+async function findOneById(
+  request: Request<{ id: string }>,
   response: Response,
 ) {
-  const { email } = request.params;
+  const { id } = request.params;
 
-  const user = await usersService.findOneByEmail(email);
+  const user = await usersService.findOneById(id);
 
   return response.status(200).json(user);
 }
 
-export default {
+const usersControler = {
   create,
   update,
   remove,
-  findOneByEmail,
+  findOneById,
 };
+
+export default usersControler;
