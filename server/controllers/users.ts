@@ -19,6 +19,13 @@ async function update(request: Request<{ email: string }>, response: Response) {
   return response.status(200).json(updatedUser);
 }
 
+async function remove(request: Request<{ email: string }>, response: Response) {
+  const { email } = request.params;
+
+  const deletedUser = await usersService.remove(email);
+  return response.status(204).json(deletedUser);
+}
+
 async function findOneByEmail(
   request: Request<{ email: string }>,
   response: Response,
@@ -33,5 +40,6 @@ async function findOneByEmail(
 export default {
   create,
   update,
+  remove,
   findOneByEmail,
 };

@@ -48,6 +48,22 @@ async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
   return results.rows[0];
 }
 
+async function runDeleteQuery(email: string) {
+  const results = await database.query({
+    text: `
+      DELETE FROM
+        users
+      WHERE
+        email = $1
+      RETURNING
+        *
+      ;`,
+    values: [email],
+  });
+
+  return results.rows[0];
+}
+
 async function findOneByName(name: string) {
   const userFound = await runSelectQuery(name);
 
@@ -113,6 +129,7 @@ async function findOneByEmail(email: string) {
 const usersRepository = {
   runInsertQuery,
   runUpdateQuery,
+  runDeleteQuery,
   findOneByName,
   findOneByEmail,
 };
