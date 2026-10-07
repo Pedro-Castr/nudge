@@ -13,8 +13,8 @@ async function create(userInputValues: UserOptions) {
   return newUser;
 }
 
-async function update(email: string, userInputValues: UserOptions) {
-  const currentUser = await usersRepository.findOneByEmail(email);
+async function update(id: string, userInputValues: UserOptions) {
+  const currentUser = await usersRepository.findOneById(id);
 
   if ("nome" in userInputValues) {
     await validadeEmptyName(userInputValues.nome);
@@ -35,11 +35,10 @@ async function update(email: string, userInputValues: UserOptions) {
   return updatedUser;
 }
 
-async function remove(email: string) {
-  await findOneByEmail(email);
-  await validadeEmptyEmail(email);
+async function remove(id: string) {
+  await findOneById(id);
 
-  const deletedUser = await usersRepository.runDeleteQuery(email);
+  const deletedUser = await usersRepository.runDeleteQuery(id);
   return deletedUser;
 }
 
@@ -82,6 +81,12 @@ async function hashPasswordInObject(userInputValues: UserOptions) {
   userInputValues.senha = hashedPassword;
 }
 
+async function findOneById(id: string) {
+  const user = await usersRepository.findOneById(id);
+
+  return user;
+}
+
 async function findOneByName(nome: string) {
   const user = await usersRepository.findOneByName(nome);
 
@@ -101,6 +106,7 @@ const usersService = {
   validadeUniqueEmail,
   validadeEmptyName,
   validadeEmptyEmail,
+  findOneById,
   findOneByName,
   findOneByEmail,
 };

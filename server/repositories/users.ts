@@ -48,20 +48,51 @@ async function runUpdateQuery(userWithNewValues: UpdateUserOptions) {
   return results.rows[0];
 }
 
-async function runDeleteQuery(email: string) {
+async function runDeleteQuery(id: string) {
   const results = await database.query({
     text: `
       DELETE FROM
         users
       WHERE
-        email = $1
+        id = $1
       RETURNING
         *
       ;`,
-    values: [email],
+    values: [id],
   });
 
   return results.rows[0];
+}
+
+async function findOneById(id: string) {
+  const userFound = await runSelectQuery(id);
+
+  return userFound;
+
+  async function runSelectQuery(id: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        id = $1
+      LIMIT
+        1
+      ;`,
+      values: [id],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O usuário informado não foi encontrado no sistema.",
+        action: "Verifique se o ID informado está correto.",
+      });
+    }
+
+    return results.rows[0];
+  }
 }
 
 async function findOneByName(name: string) {
@@ -130,6 +161,7 @@ const usersRepository = {
   runInsertQuery,
   runUpdateQuery,
   runDeleteQuery,
+  findOneById,
   findOneByName,
   findOneByEmail,
 };
