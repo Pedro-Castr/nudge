@@ -5,6 +5,7 @@ const router = Router();
 
 router.post("/", usersController.create);
 router.patch("/:email", usersController.update);
+router.delete("/:email", usersController.remove);
 router.get("/:email", usersController.findOneByEmail);
 
 export default router;

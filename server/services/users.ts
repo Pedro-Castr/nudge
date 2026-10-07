@@ -35,6 +35,14 @@ async function update(email: string, userInputValues: UserOptions) {
   return updatedUser;
 }
 
+async function remove(email: string) {
+  await findOneByEmail(email);
+  await validadeEmptyEmail(email);
+
+  const deletedUser = await usersRepository.runDeleteQuery(email);
+  return deletedUser;
+}
+
 async function validadeUniqueEmail(email: string) {
   try {
     await usersRepository.findOneByEmail(email);
@@ -89,6 +97,7 @@ async function findOneByEmail(email: string) {
 const usersService = {
   create,
   update,
+  remove,
   validadeUniqueEmail,
   validadeEmptyName,
   validadeEmptyEmail,
