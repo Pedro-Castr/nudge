@@ -1,0 +1,141 @@
+/* ---------- Tokens ---------- */
+:root {
+  --page: #0096c7;
+  --blue-deep: #0077a0;
+  --blue-deeper: #00607f;
+  --ink: #012235;
+
+  --paper: #f4fbfe;
+  --mist: #e3f4fa;
+  --edge: #bfe3f0;
+  --field-edge: #6e9aae;
+
+  --muted: #3f6b80;
+  --placeholder: #4f7487;
+  --link: #006a8e;
+
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+
+  --radius-sm: 9px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 24px;
+
+  --shadow-soft: 0 8px 24px rgba(1, 34, 53, 0.18);
+  --shadow-lift: 0 18px 40px rgba(1, 34, 53, 0.35);
+  --shadow-card: 0 24px 60px rgba(1, 34, 53, 0.28);
+
+  --tap: 44px;
+
+  /* Granulado: ruído fractal em SVG. Use com mix-blend-mode: overlay. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-size: 220px;
+  --grain-opacity: 0.55;
+
+  color-scheme: light;
+}
+
+/* ---------- Reset e base ---------- */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    background: var(--page);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p {
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: var(--link);
+  }
+
+  a:hover {
+    color: var(--ink);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]) {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    background: #fff;
+    border: 1px solid var(--field-edge);
+    border-radius: var(--radius-md);
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  input:focus {
+    border-color: var(--blue-deep);
+  }
+
+  ::placeholder {
+    color: var(--placeholder);
+    opacity: 1;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: #fff;
+  }
+}
