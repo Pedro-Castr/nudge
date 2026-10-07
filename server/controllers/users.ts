@@ -10,6 +10,15 @@ async function create(request: Request, response: Response) {
   return response.status(201).json(newUser);
 }
 
+async function update(request: Request<{ email: string }>, response: Response) {
+  const { email } = request.params;
+  const userInputValues = request.body;
+
+  const updatedUser = await usersService.update(email, userInputValues);
+
+  return response.status(200).json(updatedUser);
+}
+
 async function findOneByEmail(
   request: Request<{ email: string }>,
   response: Response,
@@ -23,5 +32,6 @@ async function findOneByEmail(
 
 export default {
   create,
+  update,
   findOneByEmail,
 };
