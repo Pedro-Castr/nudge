@@ -31,6 +31,7 @@
     "dotenv": "^18.0.5",
     "dotenv-expand": "^1000.0.0",
     "express": "^5.2.1",
+    "next": "^16.4.0",
     "node-pg-migrate": "^9.0.0",
     "pg": "^8.23.1",
     "react": "^19.2.8",
