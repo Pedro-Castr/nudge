@@ -13,6 +13,7 @@ import express, {
 
 import { InternalServerError } from "../infra/errors/errors";
 import usersRoutes from "./routes/users";
+import migrationsRoutes from "./routes/migrations";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", usersRoutes);
+app.use("/api/migrations", migrationsRoutes);
 
 app.use(
   (

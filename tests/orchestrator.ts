@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import database from "../infra/connection";
-import migrator from "../server/services/migrator";
+import migrator from "../infra/migrator";
 import user from "../server/services/users";
 
 type CreateUserOptions = {

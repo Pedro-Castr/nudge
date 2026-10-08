@@ -1,6 +1,6 @@
 import { runner as migrationRunner } from "node-pg-migrate";
 import { resolve } from "node:path";
-import connection from "../../infra/connection";
+import connection from "./connection";
 
 const defaultMigrationsOptions = {
   dryRun: true,
