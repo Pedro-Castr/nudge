@@ -1,14 +1,15 @@
 /* ---------- Layout + granulado ---------- */
-.auth {
+
+.home {
   position: relative;
   isolation: isolate;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--page);
 }
 
-.auth::before {
+.home::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -21,17 +22,20 @@
 }
 
 /* ---------- Painel da marca ---------- */
+
 .brand {
   position: relative;
   z-index: 1;
-  flex: 1 1 560px;
   min-width: 0;
+  min-height: 80vh;
   overflow: hidden;
   padding: 48px clamp(24px, 5vw, 72px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   gap: 48px;
+  text-align: center;
 }
 
 .brand > * {
@@ -47,17 +51,17 @@
   );
   background-size: 28px 28px;
   -webkit-mask-image: radial-gradient(
-    ellipse at 62% 58%,
+    ellipse at 50% 50%,
     #000 25%,
     transparent 72%
   );
-  mask-image: radial-gradient(ellipse at 62% 58%, #000 25%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 25%, transparent 72%);
 }
 
 .brandRipples {
   position: absolute;
-  left: 62%;
-  top: 58%;
+  left: 50%;
+  top: 50%;
   width: 0;
   height: 0;
 }
@@ -100,28 +104,15 @@
   }
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #fff;
-}
-
-.logoWord {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 30px;
-  letter-spacing: -0.02em;
-}
-
 .brandContent {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
 }
 
 .brandTitle {
-  max-width: 560px;
+  max-width: 720px;
   font-size: clamp(34px, 4.2vw, 56px);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -130,19 +121,43 @@
 }
 
 .brandText {
-  max-width: 460px;
+  max-width: 520px;
   font-size: 18px;
   line-height: 1.5;
   color: var(--ink);
 }
 
+/* ---------- Botão para entrar ---------- */
+
+.cta {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  margin-top: 8px;
+  padding: 0 28px;
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--blue-deep);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+}
+
+.cta:hover {
+  background: var(--mist);
+}
+
 /* ---------- Prévia das tarefas ---------- */
+
 .preview {
   width: min(420px, 100%);
-  margin-top: 32px;
+  margin: 16px auto 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  text-align: left;
 }
 
 .task {
@@ -224,6 +239,7 @@
 }
 
 .promises {
+  justify-content: center;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -247,4 +263,111 @@
   height: 6px;
   border-radius: 50%;
   background: #fff;
+}
+
+/* ---------- Cabeçalho, seções e rodapé ---------- */
+
+.header,
+.steps,
+.final,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px clamp(24px, 5vw, 72px) 0;
+}
+
+.headerLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 20px;
+  border: 1.5px solid #fff;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.headerLink:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.steps,
+.final {
+  padding: 72px clamp(24px, 5vw, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.sectionTitle {
+  max-width: 640px;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.stepList {
+  width: min(960px, 100%);
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 24px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue-deep);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.stepTitle {
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.stepText {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.footer {
+  padding: 32px 24px 40px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink);
+  opacity: 0.8;
 }

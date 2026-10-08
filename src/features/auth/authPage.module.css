@@ -1,0 +1,28 @@
+.auth {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--page);
+}
+
+.auth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: var(--grain-size) var(--grain-size);
+  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+}
+
+.logoLink {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin: 32px clamp(24px, 5vw, 72px) 0;
+  text-decoration: none;
+}

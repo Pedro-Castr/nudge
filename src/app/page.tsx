@@ -1,9 +1,5 @@
-import { AuthPage } from "@/features/auth/pages/authPage";
+import { HomePage } from "@/features/home/homePage";
 
-export default function Home() {
-  return (
-    <main>
-      <AuthPage />
-    </main>
-  );
+export default function Page() {
+  return <HomePage />;
 }
