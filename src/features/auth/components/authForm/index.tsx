@@ -1,3 +1,5 @@
+"use client";
+
 import { useId, useState, type FormEvent } from "react";
 import { type Mode, type AuthValues } from "@/features/auth/types/auth";
 

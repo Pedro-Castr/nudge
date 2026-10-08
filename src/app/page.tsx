@@ -1,3 +1,9 @@
+import { AuthPage } from "@/features/auth/pages/authPage";
+
 export default function Home() {
-  return <main>Nudge</main>;
+  return (
+    <main>
+      <AuthPage />
+    </main>
+  );
 }
