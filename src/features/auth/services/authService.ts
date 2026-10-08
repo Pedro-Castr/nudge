@@ -1,6 +1,6 @@
 import type { AuthValues } from "@/features/auth/types/auth";
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "/api";
 
 export async function registerUser(values: AuthValues) {
   const response = await fetch(`${API_URL}/users`, {
@@ -16,6 +16,10 @@ export async function registerUser(values: AuthValues) {
   });
 
   const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message ?? "Não foi possível criar a conta.");
+  }
 
   return data;
 }

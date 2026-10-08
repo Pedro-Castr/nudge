@@ -1,3 +1,5 @@
+"use client";
+
 import { registerUser } from "@/features/auth/services/authService";
 import AuthForm from "@/features/auth/components/authForm";
 import { type Mode, type AuthValues } from "@/features/auth/types/auth";
