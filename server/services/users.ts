@@ -1,7 +1,7 @@
-import password from "../services/password";
-import usersRepository from "../repositories/users";
-import { ValidationError, NotFoundError } from "../../infra/errors/errors";
-import { type UserOptions } from "../types/users";
+import password from "@server/services/password";
+import usersRepository from "@server/repositories/users";
+import { ValidationError, NotFoundError } from "@infra/errors/errors";
+import { type UserOptions } from "@server/types/users";
 
 async function create(userInputValues: UserOptions) {
   await validadeUniqueEmail(userInputValues.email);

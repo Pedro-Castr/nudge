@@ -4,7 +4,7 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "module": "esnext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "jest"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
@@ -23,8 +23,11 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@server/*": ["./server/*"],
+      "@infra/*": ["./infra/*"],
+      "@tests/*": ["./tests/*"]
     }
   },
-  "include": ["src", "infra"]
+  "include": ["src", "infra", "server", "tests"]
 }

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { InternalServerError, ValidationError, NotFoundError } from "./errors";
+import {
+  InternalServerError,
+  ValidationError,
+  NotFoundError,
+} from "@infra/errors/errors";
 
 export function handleError(error: unknown) {
   if (error instanceof ValidationError || error instanceof NotFoundError) {

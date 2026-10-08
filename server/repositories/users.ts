@@ -1,6 +1,6 @@
-import database from "../../infra/connection";
-import { NotFoundError } from "../../infra/errors/errors";
-import { type UserOptions, type UpdateUserOptions } from "../types/users";
+import database from "@infra/connection";
+import { NotFoundError } from "@infra/errors/errors";
+import { type UserOptions, type UpdateUserOptions } from "@server/types/users";
 
 async function runInsertQuery(userInputValues: UserOptions) {
   const results = await database.query({

@@ -1,5 +1,5 @@
 import { useId, useState, type FormEvent } from "react";
-import { type Mode, type AuthValues } from "../../types/auth";
+import { type Mode, type AuthValues } from "@/features/auth/types/auth";
 
 import styles from "./authForm.module.css";
 

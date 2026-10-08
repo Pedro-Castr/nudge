@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { handleError } from "../../../../infra/errors/handleError";
-import usersService from "../../../../server/services/users";
+import { handleError } from "@infra/errors/handleError";
+import usersService from "@server/services/users";
 
 export async function POST(request: Request) {
   try {

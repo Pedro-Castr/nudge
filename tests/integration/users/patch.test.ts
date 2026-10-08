@@ -1,7 +1,7 @@
 import { version as uuidVersion } from "uuid";
-import orchestrator from "../../orchestrator";
-import usersRepository from "../../../server/repositories/users";
-import password from "../../../server/services/password";
+import orchestrator from "@tests/orchestrator";
+import usersRepository from "@server/repositories/users";
+import password from "@server/services/password";
 
 beforeAll(async () => {
   await orchestrator.clearDatabase();
