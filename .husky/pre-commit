@@ -1,1 +1,3 @@
 npm run scan:staged
+npm run lint:prettier:check
+npm run lint:ts:check

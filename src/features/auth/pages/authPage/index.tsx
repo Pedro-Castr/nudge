@@ -1,6 +1,6 @@
-import { registerUser } from "../../services/authService";
-import AuthForm from "../../components/authForm";
-import { type Mode, type AuthValues } from "../../types/auth";
+import { registerUser } from "@/features/auth/services/authService";
+import AuthForm from "@/features/auth/components/authForm";
+import { type Mode, type AuthValues } from "@/features/auth/types/auth";
 
 import styles from "./authPage.module.css";
 

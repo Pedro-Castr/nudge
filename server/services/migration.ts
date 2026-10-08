@@ -1,4 +1,4 @@
-import migrator from "../../infra/migrator";
+import migrator from "@infra/migrator";
 
 async function getPendingMigrations() {
   return await migrator.listPendingMigrations();

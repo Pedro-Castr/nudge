@@ -1,4 +1,4 @@
-import type { AuthValues } from "../types/auth";
+import type { AuthValues } from "@/features/auth/types/auth";
 
 const API_URL = "http://localhost:3000/api";
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import migrationService from "../../../../server/services/migration";
+import migrationService from "@server/services/migration";
 
 export async function GET() {
   const pendingMigrations = await migrationService.getPendingMigrations();
