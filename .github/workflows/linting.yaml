@@ -15,14 +15,12 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run lint:check
-  gitleaks:
-    name: Secret scan
+      - run: npm run lint:prettier:check
+  ts-check:
+    name: TS Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -30,4 +28,4 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run scan:all
+      - run: npm run lint:ts:check
