@@ -2,7 +2,7 @@ import type { AuthValues } from "@/features/auth/types/auth";
 
 const API_URL = "/api";
 
-export async function registerUser(values: AuthValues) {
+async function registerUser(values: AuthValues) {
   const response = await fetch(`${API_URL}/users`, {
     method: "POST",
     headers: {
@@ -23,3 +23,31 @@ export async function registerUser(values: AuthValues) {
 
   return data;
 }
+
+async function loginUser(values: AuthValues) {
+  const response = await fetch(`${API_URL}/session`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: values.email,
+      senha: values.senha,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message ?? "Não foi possível acessar a conta.");
+  }
+
+  return data;
+}
+
+const authService = {
+  registerUser,
+  loginUser,
+};
+
+export default authService;

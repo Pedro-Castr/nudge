@@ -3,7 +3,7 @@ import { ServiceError } from "./errors/errors";
 
 type QueryObjetcOptions = {
   text: string;
-  values?: string[];
+  values?: unknown[];
 };
 
 async function query(queryObjetc: QueryObjetcOptions) {

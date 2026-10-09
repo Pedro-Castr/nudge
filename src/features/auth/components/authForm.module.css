@@ -19,6 +19,7 @@
   background: var(--paper);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
 .tabs {
@@ -172,4 +173,87 @@
   font-size: 15px;
   font-weight: 600;
   text-decoration: underline;
+}
+
+.error {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #fdecec;
+  color: #a12626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---------- Transição entre login e cadastro ---------- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.panelWrap {
+  transition: height 0.22s ease;
+}
+.animating {
+  overflow-y: clip;
+}
+
+.outForward {
+  animation: slideOutLeft 0.22s ease-in forwards;
+  pointer-events: none;
+}
+
+.outBack {
+  animation: slideOutRight 0.22s ease-in forwards;
+  pointer-events: none;
+}
+
+.inForward {
+  animation: slideInFromRight 0.22s ease-out;
+}
+
+.inBack {
+  animation: slideInFromLeft 0.22s ease-out;
+}
+
+@keyframes slideOutLeft {
+  to {
+    transform: translateX(-48px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  to {
+    transform: translateX(48px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(48px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-48px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outForward,
+  .outBack,
+  .inForward,
+  .inBack {
+    animation: none;
+  }
+
+  .panelWrap {
+    transition: none;
+  }
 }

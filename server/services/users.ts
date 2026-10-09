@@ -87,12 +87,6 @@ async function findOneById(id: string) {
   return user;
 }
 
-async function findOneByName(nome: string) {
-  const user = await usersRepository.findOneByName(nome);
-
-  return user;
-}
-
 async function findOneByEmail(email: string) {
   const user = await usersRepository.findOneByEmail(email);
 
@@ -107,7 +101,6 @@ const usersService = {
   validadeEmptyName,
   validadeEmptyEmail,
   findOneById,
-  findOneByName,
   findOneByEmail,
 };
 
