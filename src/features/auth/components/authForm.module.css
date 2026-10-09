@@ -175,6 +175,15 @@
   text-decoration: underline;
 }
 
+.error {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #fdecec;
+  color: #a12626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* ---------- Transição entre login e cadastro ---------- */
 
 .panel {

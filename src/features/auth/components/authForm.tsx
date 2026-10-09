@@ -37,6 +37,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   });
   const timers = useRef<number[]>([]);
   const isLogin = view === "login";
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const el = panelRef.current;
@@ -59,6 +60,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     setMode(next);
     setDirection(next === "signup" ? "forward" : "back");
     setPhase("out");
+    setError(null);
 
     const swap = window.setTimeout(() => {
       setView(next);
@@ -77,8 +79,11 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitting(true);
+    setError(null);
     try {
       await onSubmit?.(view, values);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Algo deu errado");
     } finally {
       setSubmitting(false);
     }
@@ -88,6 +93,12 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
 
   return (
     <section className={styles.formSide}>
+      {error && (
+        <p role="alert" className={styles.error}>
+          {error}
+        </p>
+      )}
+
       <div className={styles.card}>
         <div className={styles.tabs}>
           <button
