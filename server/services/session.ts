@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import sessionRepository from "@server/repositories/session";
 
-const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 60 * 1000; // 60 Dias
+const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 30 * 1000; // 30 Dias
 
 async function create(userId: string) {
   const token = crypto.randomBytes(48).toString("hex");
