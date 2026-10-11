@@ -27,10 +27,18 @@ async function createUser(userObject: CreateUserOptions) {
   });
 }
 
+async function setSessionExpiresAt(token: string, expiresAt: Date) {
+  await database.query({
+    text: `UPDATE sessions SET expires_at = $2 WHERE token = $1;`,
+    values: [token, expiresAt],
+  });
+}
+
 const orchestrator = {
   clearDatabase,
   runPendingMigrations,
   createUser,
+  setSessionExpiresAt,
 };
 
 export default orchestrator;
