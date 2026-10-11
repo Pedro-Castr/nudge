@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+
 import sessionService from "@server/services/session";
 import userService from "@server/services/users";
 
@@ -8,6 +9,8 @@ export async function getCurrentUser() {
 
   const session = await sessionService.findOneValidByToken(token);
   if (!session) return null;
+
+  await sessionService.renewIfNeeded(session);
 
   const { senha, ...user } = await userService.findOneById(session.user_id);
   return user;
