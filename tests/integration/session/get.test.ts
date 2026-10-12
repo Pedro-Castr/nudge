@@ -11,7 +11,7 @@ const HOUR = 60 * 60 * 1000;
 
 async function createSessionWithAge(ageInMs: number) {
   const user = await orchestrator.createUser({});
-  const session = await sessionService.create(user.id);
+  const session = await orchestrator.createSession(user.id);
   const expiresAt = new Date(Date.now() + EXPIRATION - ageInMs);
 
   await orchestrator.setSessionExpiresAt(session.token, expiresAt);

@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import database from "@infra/connection";
 import migrator from "@infra/migrator";
+import sessionService from "@server/services/session";
 import user from "@server/services/users";
 
 type CreateUserOptions = {
@@ -27,6 +28,10 @@ async function createUser(userObject: CreateUserOptions) {
   });
 }
 
+async function createSession(userId: string) {
+  return await sessionService.create(userId);
+}
+
 async function setSessionExpiresAt(token: string, expiresAt: Date) {
   await database.query({
     text: `UPDATE sessions SET expires_at = $2 WHERE token = $1;`,
@@ -38,6 +43,7 @@ const orchestrator = {
   clearDatabase,
   runPendingMigrations,
   createUser,
+  createSession,
   setSessionExpiresAt,
 };
 
