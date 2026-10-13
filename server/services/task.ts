@@ -22,6 +22,14 @@ async function update(id: string, userInputValues: TaskOptions) {
   return updatedTask;
 }
 
+async function findOneById(id: string) {
+  return await taskRepository.findOneById(id);
+}
+
+async function findTasksByUserId(userId: string) {
+  return await taskRepository.findTasksByUserId(userId);
+}
+
 async function validateEmptyName(name: string) {
   if (!name || name === "") {
     throw new ValidationError({
@@ -34,6 +42,8 @@ async function validateEmptyName(name: string) {
 const taskService = {
   create,
   update,
+  findOneById,
+  findTasksByUserId,
 };
 
 export default taskService;
