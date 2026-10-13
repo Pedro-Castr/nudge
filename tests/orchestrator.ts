@@ -2,7 +2,9 @@ import { faker } from "@faker-js/faker";
 import database from "@infra/connection";
 import migrator from "@infra/migrator";
 import sessionService from "@server/services/session";
+import taskService from "@server/services/task";
 import user from "@server/services/users";
+import { TaskOptions } from "@server/types/task";
 
 type CreateUserOptions = {
   nome?: string;
@@ -39,12 +41,20 @@ async function setSessionExpiresAt(token: string, expiresAt: Date) {
   });
 }
 
+async function createTask(userId: string, taskObject?: TaskOptions) {
+  return await taskService.create(userId, {
+    nome: taskObject?.nome || faker.lorem.words(3),
+    descricao: taskObject?.descricao || faker.lorem.sentence(),
+  });
+}
+
 const orchestrator = {
   clearDatabase,
   runPendingMigrations,
   createUser,
   createSession,
   setSessionExpiresAt,
+  createTask,
 };
 
 export default orchestrator;
