@@ -51,9 +51,9 @@ async function runUpdateQuery(userInputValues: TaskOptions) {
 }
 
 async function findOneById(id: string) {
-  const userFound = await runSelectQuery(id);
+  const taskFound = await runSelectQuery(id);
 
-  return userFound;
+  return taskFound;
 
   async function runSelectQuery(id: string) {
     const results = await database.query({
@@ -72,7 +72,7 @@ async function findOneById(id: string) {
 
     if (results.rowCount === 0) {
       throw new NotFoundError({
-        message: "O usuário informado não foi encontrado no sistema.",
+        message: "A tarefa informada não foi encontrada no sistema.",
         action: "Verifique se o ID informado está correto.",
       });
     }
@@ -81,10 +81,40 @@ async function findOneById(id: string) {
   }
 }
 
+async function findTasksByUserId(userId: string) {
+  const taskList = await runSelectQuery(userId);
+
+  return taskList;
+
+  async function runSelectQuery(userId: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        tasks
+      WHERE
+        user_id = $1
+      ;`,
+      values: [userId],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "Nenhuma tarefa foi encontrada.",
+        action: "Tente criar uma nova tarefa.",
+      });
+    }
+
+    return results.rows;
+  }
+}
+
 const taskRepository = {
   runInsertQuery,
   runUpdateQuery,
   findOneById,
+  findTasksByUserId,
 };
 
 export default taskRepository;
