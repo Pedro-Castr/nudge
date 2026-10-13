@@ -120,5 +120,61 @@ describe("POST api/task", () => {
         status_code: 400,
       });
     });
+
+    test("Com 'posição' diferente de 1", async () => {
+      const createdUser = await orchestrator.createUser({});
+      const session = await orchestrator.createSession(createdUser.id);
+
+      const response1 = await fetch(`http://localhost:3000/api/task/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session_id=${session.token}`,
+        },
+        body: JSON.stringify({
+          nome: "tarefa 1",
+        }),
+      });
+
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch(`http://localhost:3000/api/task/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session_id=${session.token}`,
+        },
+        body: JSON.stringify({
+          nome: "tarefa 2",
+        }),
+      });
+
+      expect(response2.status).toBe(201);
+
+      const response2Body = await response2.json();
+      expect(response2Body).toEqual({
+        id: response2Body.id,
+        user_id: createdUser.id,
+        nome: "tarefa 2",
+        descricao: null,
+        concluida: false,
+        posicao: 2,
+        created_at: response2Body.created_at,
+        updated_at: response2Body.updated_at,
+      });
+
+      expect(uuidVersion(response2Body.id)).toBe(4);
+
+      const createdAt = new Date(response2Body.created_at);
+      const updatedAt = new Date(response2Body.updated_at);
+
+      expect(createdAt).not.toBeNaN();
+      expect(updatedAt).not.toBeNaN();
+
+      createdAt.setSeconds(0);
+      updatedAt.setSeconds(0);
+
+      expect(createdAt).toEqual(updatedAt);
+    });
   });
 });
