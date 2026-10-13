@@ -22,6 +22,12 @@ async function update(id: string, userInputValues: TaskOptions) {
   return updatedTask;
 }
 
+async function remove(id: string) {
+  await findOneById(id);
+
+  return await taskRepository.runDeleteQuery(id);
+}
+
 async function findOneById(id: string) {
   return await taskRepository.findOneById(id);
 }
@@ -42,6 +48,7 @@ async function validateEmptyName(name: string) {
 const taskService = {
   create,
   update,
+  remove,
   findOneById,
   findTasksByUserId,
 };

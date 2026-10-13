@@ -50,6 +50,18 @@ async function runUpdateQuery(userInputValues: TaskOptions) {
   return results.rows[0];
 }
 
+async function runDeleteQuery(id: string) {
+  await database.query({
+    text: `
+      DELETE FROM
+        tasks
+      WHERE
+        id = $1
+      ;`,
+    values: [id],
+  });
+}
+
 async function findOneById(id: string) {
   const taskFound = await runSelectQuery(id);
 
@@ -113,6 +125,7 @@ async function findTasksByUserId(userId: string) {
 const taskRepository = {
   runInsertQuery,
   runUpdateQuery,
+  runDeleteQuery,
   findOneById,
   findTasksByUserId,
 };

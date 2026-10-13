@@ -38,3 +38,20 @@ export async function GET(_request: Request, context: RouteContext) {
     return handleError(error);
   }
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) throw new UnauthorizedError();
+
+    const { id } = await context.params;
+
+    await taskService.remove(id);
+
+    return new Response(null, {
+      status: 204,
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}
