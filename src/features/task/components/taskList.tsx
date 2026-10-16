@@ -1,6 +1,5 @@
 import TaskItem from "./taskItem";
 import type { Task } from "@/features/task/types/task";
-
 import styles from "./taskList.module.css";
 
 interface TaskListProps {
@@ -22,8 +21,6 @@ export default function TaskList({ tasks }: TaskListProps) {
 
   const pendingCount =
     pending.length === 1 ? "1 pendente" : `${pending.length} pendentes`;
-  const doneCount =
-    done.length === 1 ? "1 concluída" : `${done.length} concluídas`;
 
   return (
     <div className={styles.list}>

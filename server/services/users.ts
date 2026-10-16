@@ -59,7 +59,7 @@ async function validadeUniqueEmail(email: string) {
 }
 
 async function validadeEmptyName(name: string) {
-  if (!name || name === "") {
+  if (!name.trim() || name.trim() === "") {
     throw new ValidationError({
       message: "Nome é um campo obrigatório.",
       action: "Informe um nome para completar a ação.",
@@ -68,7 +68,7 @@ async function validadeEmptyName(name: string) {
 }
 
 async function validadeEmptyEmail(email: string) {
-  if (!email || email === "") {
+  if (!email.trim() || email.trim() === "") {
     throw new ValidationError({
       message: "Email é um campo obrigatório.",
       action: "Informe um email para completar a ação.",

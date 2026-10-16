@@ -1,4 +1,7 @@
 .composer {
+  /* Referência para o painel de detalhes flutuar, e acima da lista */
+  position: relative;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   /* Nunca encosta nas bordas, como a lista de tarefas */
@@ -34,6 +37,13 @@
   border-radius: 50%;
   background: var(--blue-deep);
   opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+
+/* Com texto nos detalhes, a bolinha fica cheia: avisa que há algo escrito
+   mesmo com o painel fechado (apague esta regra se não quiser o aviso) */
+.composer:has(.textarea:not(:placeholder-shown)) .dot {
+  opacity: 1;
 }
 
 .field {
@@ -91,22 +101,36 @@
   outline-offset: 2px;
 }
 
-/* ---------- Detalhes sob demanda ---------- */
+/* ---------- Detalhes: flutuam sobre a lista, sem empurrá-la ---------- */
 
+/* Fora do fluxo: não ocupa espaço, então nada abaixo se mexe.
+   O visibility esconde o campo do teclado e de leitores de tela enquanto fechado. */
 .details {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.2s ease;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding-top: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
 }
 
-.detailsInner {
-  min-height: 0;
-  overflow: hidden;
+/* Abre enquanto qualquer parte do formulário tem foco */
+.composer:focus-within .details {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
 }
 
 .detailsField {
   display: block;
-  padding-top: 8px;
 }
 
 .textarea {
@@ -121,7 +145,8 @@
   font-size: 14px;
   line-height: 1.4;
   resize: none;
-  box-shadow: var(--shadow-soft);
+  /* Sombra mais forte: ele está por cima da lista */
+  box-shadow: var(--shadow-card);
   outline: none;
   transition: box-shadow 0.2s ease;
 }
@@ -129,14 +154,7 @@
 .textarea:focus {
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.7),
-    var(--shadow-soft);
-}
-
-/* Abre quando qualquer parte do formulário tem foco,
-   e continua aberto enquanto houver texto nos detalhes */
-.composer:focus-within .details,
-.composer:has(.textarea:not(:placeholder-shown)) .details {
-  grid-template-rows: 1fr;
+    var(--shadow-card);
 }
 
 /* Rótulo só para leitores de tela; o placeholder faz o papel visual */
@@ -152,8 +170,25 @@
   border: 0;
 }
 
+.error {
+  margin: 0 0 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #a12626;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-card);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pill,
+  .dot,
   .submit,
   .details,
   .textarea {

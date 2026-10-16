@@ -100,8 +100,15 @@
 
 /* ---------- Nome ---------- */
 
-.nome {
+.text {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nome {
   min-width: 0;
   font-size: 16px;
   font-weight: 500;
@@ -113,6 +120,11 @@
 .itemDone .nome {
   color: var(--muted);
   text-decoration: line-through;
+}
+
+.cardError {
+  font-size: 13px;
+  color: #a12626;
 }
 
 /* ---------- Botão de concluir (lateral direita) ---------- */
@@ -281,6 +293,84 @@
   from {
     opacity: 0;
     transform: translateY(8px) scale(0.98);
+  }
+}
+
+.complete:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* ---------- Edição dentro do pop-up ---------- */
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.editInput,
+.editTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.editTextarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.editInput:focus-visible,
+.editTextarea:focus-visible {
+  outline: 2px solid var(--blue-deep);
+  outline-offset: 1px;
+}
+
+.popupError {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #a12626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.popupPrimary {
+  background: var(--blue-deep);
+  color: #fff;
+}
+
+.popupPrimary:hover {
+  background: var(--blue-deeper);
+}
+
+.popupButton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* No celular, 16px evita o zoom automático do Safari ao focar o campo */
+@media (max-width: 640px) {
+  .editInput,
+  .editTextarea {
+    font-size: 16px;
   }
 }
 
