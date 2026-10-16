@@ -111,13 +111,6 @@ async function findTasksByUserId(userId: string) {
       values: [userId],
     });
 
-    if (results.rowCount === 0) {
-      throw new NotFoundError({
-        message: "Nenhuma tarefa foi encontrada.",
-        action: "Tente criar uma nova tarefa.",
-      });
-    }
-
     return results.rows;
   }
 }

@@ -1,31 +1,53 @@
+"use client";
+
+import { useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { FaPlus } from "react-icons/fa6";
+
+import taskService from "@/features/task/services/taskService";
 import styles from "./taskCompose.module.css";
 
-function PlusIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
 export default function TaskCompose() {
+  const router = useRouter();
+  const nomeRef = useRef<HTMLInputElement>(null);
+  const [nome, setNome] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting) return;
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await taskService.createTask({
+        nome,
+        descricao: descricao.trim() || undefined,
+      });
+
+      setNome("");
+      setDescricao("");
+      nomeRef.current?.focus();
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Algo deu errado.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
-    <form className={styles.composer}>
+    <form className={styles.composer} onSubmit={handleSubmit}>
       <div className={styles.pill}>
         <span className={styles.dot} aria-hidden="true" />
 
         <label className={styles.field}>
           <span className={styles.srOnly}>Nome da tarefa</span>
           <input
+            ref={nomeRef}
             className={styles.input}
             type="text"
             name="nome"
@@ -33,6 +55,11 @@ export default function TaskCompose() {
             maxLength={100}
             autoComplete="off"
             required
+            value={nome}
+            onChange={(e) => {
+              setNome(e.target.value);
+              setError(null);
+            }}
           />
         </label>
 
@@ -41,13 +68,20 @@ export default function TaskCompose() {
           className={styles.submit}
           aria-label="Adicionar tarefa"
           title="Adicionar tarefa"
+          disabled={submitting}
         >
-          <PlusIcon />
+          <FaPlus />
         </button>
       </div>
 
       <div className={styles.details}>
         <div className={styles.detailsInner}>
+          {error && (
+            <p role="alert" className={styles.error}>
+              {error}
+            </p>
+          )}
+
           <label className={styles.detailsField}>
             <span className={styles.srOnly}>Detalhes (opcional)</span>
             <textarea
@@ -56,6 +90,8 @@ export default function TaskCompose() {
               placeholder="Detalhes (opcional)"
               maxLength={256}
               rows={2}
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
             />
           </label>
         </div>

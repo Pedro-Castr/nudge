@@ -1,103 +1,109 @@
-import type { ReactNode } from "react";
-import type { Task } from "@/features/task/types/task";
+"use client";
 
+import { useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import {
+  FaCheck,
+  FaPencil,
+  FaTrashCan,
+  FaXmark,
+  FaArrowRotateLeft,
+} from "react-icons/fa6";
+import { LuGrip } from "react-icons/lu";
+
+import taskService from "@/features/task/services/taskService";
+import { getChanges } from "@/features/task/utils/getChanges";
+import type { Task } from "@/features/task/types/task";
 import styles from "./taskItem.module.css";
 
 interface TaskItemProps {
   task: Task;
 }
 
-function Icon({
-  children,
-  size = 18,
-  strokeWidth = 2,
-}: {
-  children: ReactNode;
-  size?: number;
-  strokeWidth?: number;
-}) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {children}
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <Icon size={20} strokeWidth={2.6}>
-      <path d="M5 12.5l4.5 4.5L19 7.5" />
-    </Icon>
-  );
-}
-
-function EditIcon() {
-  return (
-    <Icon>
-      <path d="M4 20h4L19 9l-4-4L4 16v4z" />
-      <path d="M13.5 6.5l4 4" />
-    </Icon>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <Icon>
-      <path d="M4 7h16" />
-      <path d="M9 7V4h6v3" />
-      <path d="M6 7l1 13h10l1-13" />
-    </Icon>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <Icon>
-      <path d="M6 6l12 12M18 6L6 18" />
-    </Icon>
-  );
-}
-
-function HandleIcon() {
-  return (
-    <svg
-      className={styles.handle}
-      width="14"
-      height="20"
-      viewBox="0 0 14 20"
-      aria-hidden="true"
-    >
-      {[4, 10, 16].flatMap((cy) =>
-        [4, 10].map((cx) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="1.6" />
-        )),
-      )}
-    </svg>
-  );
-}
-
 export default function TaskItem({ task }: TaskItemProps) {
+  const router = useRouter();
+  const [isRefreshing, startTransition] = useTransition();
+
+  const [completing, setCompleting] = useState(false);
+  const [toggleError, setToggleError] = useState<string | null>(null);
+
+  const [editing, setEditing] = useState(false);
+  const [nome, setNome] = useState(task.nome);
+  const [descricao, setDescricao] = useState(task.descricao ?? "");
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   const popupId = `detalhes-${task.id}`;
   const completeLabel = task.concluida ? "Reabrir tarefa" : "Concluir tarefa";
 
+  async function handleToggle() {
+    if (completing) return;
+
+    setCompleting(true);
+    setToggleError(null);
+
+    try {
+      await taskService.updateTask(task.id, { concluida: !task.concluida });
+      startTransition(() => router.refresh());
+    } catch (err) {
+      setToggleError(err instanceof Error ? err.message : "Algo deu errado.");
+    } finally {
+      setCompleting(false);
+    }
+  }
+
+  function startEdit() {
+    setNome(task.nome);
+    setDescricao(task.descricao ?? "");
+    setEditError(null);
+    setEditing(true);
+  }
+
+  async function handleSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (saving) return;
+
+    const changes = getChanges(task, {
+      nome: nome.trim(),
+      descricao: descricao.trim() || null,
+    });
+
+    if (Object.keys(changes).length === 0) {
+      setEditing(false);
+      return;
+    }
+
+    setSaving(true);
+    setEditError(null);
+
+    try {
+      await taskService.updateTask(task.id, changes);
+      setEditing(false);
+      startTransition(() => router.refresh());
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : "Algo deu errado.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    try {
+      await taskService.deleteTask(task.id);
+      startTransition(() => router.refresh());
+    } catch (err) {
+      setToggleError(err instanceof Error ? err.message : "Algo deu errado.");
+    }
+  }
+
   return (
     <li className={`${styles.item} ${task.concluida ? styles.itemDone : ""}`}>
-      {/* Cobre o card inteiro; a alça e o concluir ficam por cima dele */}
       <button
         type="button"
         className={styles.open}
         popoverTarget={popupId}
         aria-label={`Ver detalhes: ${task.nome}`}
+        onClick={() => setEditing(false)}
       />
 
       {!task.concluida && (
@@ -107,43 +113,121 @@ export default function TaskItem({ task }: TaskItemProps) {
           aria-label="Reordenar tarefa"
           title="Arraste para reordenar"
         >
-          <HandleIcon />
+          <LuGrip />
         </button>
       )}
 
-      <span className={styles.nome}>{task.nome}</span>
+      <div className={styles.text}>
+        <span className={styles.nome}>{task.nome}</span>
+        {toggleError && (
+          <span role="alert" className={styles.cardError}>
+            {toggleError}
+          </span>
+        )}
+      </div>
 
       <button
         type="button"
         className={styles.complete}
         aria-label={completeLabel}
         title={completeLabel}
+        onClick={handleToggle}
+        disabled={completing || isRefreshing}
       >
-        <CheckIcon />
+        {(!task.concluida && <FaCheck />) || <FaArrowRotateLeft />}
       </button>
 
       <div id={popupId} popover="auto" className={styles.popup}>
-        <h3 className={styles.popupTitle}>{task.nome}</h3>
+        {editing ? (
+          <form className={styles.editForm} onSubmit={handleSave}>
+            <h3 className={styles.popupTitle}>Editar tarefa</h3>
 
-        {task.descricao ? (
-          <p className={styles.popupText}>{task.descricao}</p>
+            <label className={styles.editField}>
+              Nome
+              <input
+                className={styles.editInput}
+                type="text"
+                name="nome"
+                maxLength={100}
+                autoComplete="off"
+                autoFocus
+                required
+                value={nome}
+                onChange={(e) => {
+                  setNome(e.target.value);
+                  setEditError(null);
+                }}
+              />
+            </label>
+
+            <label className={styles.editField}>
+              Detalhes (opcional)
+              <textarea
+                className={styles.editTextarea}
+                name="descricao"
+                maxLength={256}
+                rows={3}
+                value={descricao}
+                onChange={(e) => {
+                  setDescricao(e.target.value);
+                  setEditError(null);
+                }}
+              />
+            </label>
+
+            {editError && (
+              <p role="alert" className={styles.popupError}>
+                {editError}
+              </p>
+            )}
+
+            <div className={styles.popupFooter}>
+              <button
+                type="button"
+                className={styles.popupButton}
+                onClick={() => setEditing(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className={`${styles.popupButton} ${styles.popupPrimary}`}
+                disabled={saving}
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
         ) : (
-          <p className={styles.popupEmpty}>Sem descrição.</p>
-        )}
+          <>
+            <h3 className={styles.popupTitle}>{task.nome}</h3>
 
-        <div className={styles.popupFooter}>
-          <button type="button" className={styles.popupButton}>
-            <EditIcon />
-            Editar
-          </button>
-          <button
-            type="button"
-            className={`${styles.popupButton} ${styles.popupDanger}`}
-          >
-            <TrashIcon />
-            Excluir
-          </button>
-        </div>
+            {task.descricao ? (
+              <p className={styles.popupText}>{task.descricao}</p>
+            ) : (
+              <p className={styles.popupEmpty}>Sem descrição.</p>
+            )}
+
+            <div className={styles.popupFooter}>
+              <button
+                type="button"
+                className={styles.popupButton}
+                onClick={startEdit}
+              >
+                <FaPencil />
+                Editar
+              </button>
+              <button
+                type="button"
+                className={`${styles.popupButton} ${styles.popupDanger}`}
+                onClick={handleDelete}
+              >
+                <FaTrashCan />
+                Excluir
+              </button>
+            </div>
+          </>
+        )}
 
         <button
           type="button"
@@ -152,7 +236,7 @@ export default function TaskItem({ task }: TaskItemProps) {
           popoverTargetAction="hide"
           aria-label="Fechar"
         >
-          <CloseIcon />
+          <FaXmark />
         </button>
       </div>
     </li>
