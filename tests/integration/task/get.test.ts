@@ -103,15 +103,10 @@ describe("GET api/task", () => {
         },
       });
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(200);
 
       const responseBody = await response.json();
-      expect(responseBody).toEqual({
-        name: "NotFoundError",
-        message: "Nenhuma tarefa foi encontrada.",
-        action: "Tente criar uma nova tarefa.",
-        status_code: 404,
-      });
+      expect(responseBody).toEqual([]);
     });
 
     test("Com uma tarefa", async () => {
