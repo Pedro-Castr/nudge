@@ -107,11 +107,48 @@ async function findTasksByUserId(userId: string) {
         tasks
       WHERE
         user_id = $1
+      ORDER BY
+        posicao ASC;
       ;`,
       values: [userId],
     });
 
     return results.rows;
+  }
+}
+
+async function UpdateTaskPositions(userId: string, taskIds: string[]) {
+  await runSelectQuery(userId, taskIds);
+
+  async function runSelectQuery(userId: string, taskIds: string[]) {
+    await database.query({
+      text: `
+      WITH ordered AS (
+        SELECT
+          id,
+          ROW_NUMBER() OVER (
+            ORDER BY
+              COALESCE(ARRAY_POSITION($2::uuid[], id), 2147483647),
+              posicao,
+              created_at
+          )::int AS nova_posicao
+        FROM
+          tasks
+        WHERE
+          user_id = $1
+      )
+      UPDATE
+        tasks
+      SET
+        posicao = ordered.nova_posicao
+      FROM
+        ordered
+      WHERE
+        tasks.id = ordered.id
+        AND tasks.posicao IS DISTINCT FROM ordered.nova_posicao
+    ;`,
+      values: [userId, taskIds],
+    });
   }
 }
 
@@ -121,6 +158,7 @@ const taskRepository = {
   runDeleteQuery,
   findOneById,
   findTasksByUserId,
+  UpdateTaskPositions,
 };
 
 export default taskRepository;

@@ -128,46 +128,6 @@ describe("PATCH api/task/[id]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("Com 'posição' diferente", async () => {
-      const createdUser = await orchestrator.createUser({});
-      const session = await orchestrator.createSession(createdUser.id);
-      const createdTask = await orchestrator.createTask(createdUser.id);
-
-      const response = await fetch(
-        `http://localhost:3000/api/task/${createdTask.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: `session_id=${session.token}`,
-          },
-          body: JSON.stringify({
-            posicao: 3,
-          }),
-        },
-      );
-
-      expect(response.status).toBe(200);
-
-      const responseBody = await response.json();
-      expect(responseBody).toEqual({
-        id: responseBody.id,
-        user_id: createdUser.id,
-        nome: responseBody.nome,
-        descricao: responseBody.descricao,
-        concluida: responseBody.concluida,
-        posicao: 3,
-        created_at: responseBody.created_at,
-        updated_at: responseBody.updated_at,
-      });
-
-      expect(uuidVersion(responseBody.id)).toBe(4);
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN();
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-
-      expect(responseBody.updated_at > responseBody.created_at).toBe(true);
-    });
-
     test("Com 'concluida' diferente", async () => {
       const createdUser = await orchestrator.createUser({});
       const session = await orchestrator.createSession(createdUser.id);

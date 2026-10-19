@@ -12,9 +12,15 @@ import styles from "./taskItem.module.css";
 
 interface TaskItemProps {
   task: Task;
+  sortableRef?: (element: HTMLElement | null) => void;
+  handleRef?: (element: HTMLElement | null) => void;
 }
 
-export default function TaskItem({ task }: TaskItemProps) {
+export default function TaskItem({
+  task,
+  sortableRef,
+  handleRef,
+}: TaskItemProps) {
   const router = useRouter();
 
   const [toggleError, setToggleError] = useState<string | null>(null);
@@ -40,7 +46,10 @@ export default function TaskItem({ task }: TaskItemProps) {
   const completeLabel = task.concluida ? "Reabrir tarefa" : "Concluir tarefa";
 
   return (
-    <li className={`${styles.item} ${task.concluida ? styles.itemDone : ""}`}>
+    <li
+      ref={sortableRef}
+      className={`${styles.item} ${task.concluida ? styles.itemDone : ""}`}
+    >
       <TaskPopup task={task} />
 
       {!task.concluida && (
@@ -49,6 +58,7 @@ export default function TaskItem({ task }: TaskItemProps) {
           className={styles.handleArea}
           aria-label="Reordenar tarefa"
           title="Arraste para reordenar"
+          ref={handleRef}
         >
           <LuGrip />
         </button>
