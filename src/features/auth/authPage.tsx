@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Logo from "@/components/logo/logo";
+import Logo from "@/components/logo";
 import authService from "@/features/auth/services/authService";
 import AuthForm from "@/features/auth/components/authForm";
 import { type Mode, type AuthValues } from "@/features/auth/types/auth";

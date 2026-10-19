@@ -1,0 +1,189 @@
+.popup {
+  width: min(440px, calc(100vw - 32px));
+  padding: 24px;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+}
+
+.popup:popover-open {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: popupIn 0.18s ease-out;
+}
+
+.popup::backdrop {
+  background: rgba(1, 34, 53, 0.45);
+}
+
+.popupTitle {
+  padding-right: 32px;
+  font-size: 20px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.popupText,
+.popupEmpty {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.popupText {
+  white-space: pre-wrap;
+}
+
+.popupEmpty {
+  font-style: italic;
+}
+
+.popupFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--edge);
+}
+
+.popupButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--mist);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.popupButton:hover {
+  background: var(--edge);
+}
+
+.popupDanger {
+  background: #fdecec;
+  color: #a12626;
+}
+
+.popupDanger:hover {
+  background: #f9d7d7;
+}
+
+.popupButton:focus-visible,
+.popupClose:focus-visible {
+  outline: 2px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+.popupClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+}
+
+.popupClose:hover {
+  background: var(--mist);
+  color: var(--ink);
+}
+
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.editInput,
+.editTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.editTextarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.editInput:focus-visible,
+.editTextarea:focus-visible {
+  outline: 2px solid var(--blue-deep);
+  outline-offset: 1px;
+}
+
+.popupError {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #a12626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.popupPrimary {
+  background: var(--blue-deep);
+  color: #fff;
+}
+
+.popupPrimary:hover {
+  background: var(--blue-deeper);
+}
+
+.popupButton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+@media (max-width: 640px) {
+  .editInput,
+  .editTextarea {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup:popover-open {
+    animation: none;
+  }
+}
