@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { useState, useTransition, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   FaCheck,
@@ -22,19 +22,13 @@ interface TaskItemProps {
 
 export default function TaskItem({ task }: TaskItemProps) {
   const router = useRouter();
+  const [toggleError, setToggleError] = useState<string | null>(null);
   const [isRefreshing, startTransition] = useTransition();
 
-  const [completing, setCompleting] = useState(false);
-  const [toggleError, setToggleError] = useState<string | null>(null);
-
-  const [editing, setEditing] = useState(false);
   const [nome, setNome] = useState(task.nome);
   const [descricao, setDescricao] = useState(task.descricao ?? "");
-  const [saving, setSaving] = useState(false);
-  const [editError, setEditError] = useState<string | null>(null);
 
-  const popupId = `detalhes-${task.id}`;
-  const completeLabel = task.concluida ? "Reabrir tarefa" : "Concluir tarefa";
+  const [completing, setCompleting] = useState(false);
 
   async function handleToggle() {
     if (completing) return;
@@ -52,6 +46,9 @@ export default function TaskItem({ task }: TaskItemProps) {
     }
   }
 
+  const [editing, setEditing] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   function startEdit() {
     setNome(task.nome);
     setDescricao(task.descricao ?? "");
@@ -59,7 +56,9 @@ export default function TaskItem({ task }: TaskItemProps) {
     setEditing(true);
   }
 
-  async function handleSave(event: FormEvent<HTMLFormElement>) {
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (saving) return;
 
@@ -95,6 +94,9 @@ export default function TaskItem({ task }: TaskItemProps) {
       setToggleError(err instanceof Error ? err.message : "Algo deu errado.");
     }
   }
+
+  const popupId = `detalhes-${task.id}`;
+  const completeLabel = task.concluida ? "Reabrir tarefa" : "Concluir tarefa";
 
   return (
     <li className={`${styles.item} ${task.concluida ? styles.itemDone : ""}`}>

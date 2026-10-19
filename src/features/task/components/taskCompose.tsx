@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa6";
 
@@ -10,12 +10,14 @@ import styles from "./taskCompose.module.css";
 export default function TaskCompose() {
   const router = useRouter();
   const nomeRef = useRef<HTMLInputElement>(null);
+
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting) return;
 
