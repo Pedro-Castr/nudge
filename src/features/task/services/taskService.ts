@@ -63,11 +63,25 @@ async function getTasksByUserId() {
   }
 }
 
+async function reorderTasks(ids: string[]): Promise<void> {
+  const response = await fetch(`${API_URL}/task/order`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ids }),
+  });
+
+  if (response.ok) return;
+
+  const data = await response.json().catch(() => null);
+  throw new Error(data?.message);
+}
+
 const taskService = {
   createTask,
   updateTask,
   deleteTask,
   getTasksByUserId,
+  reorderTasks,
 };
 
 export default taskService;

@@ -3,6 +3,7 @@ export interface Task {
   nome: string;
   descricao: string | null;
   concluida: boolean;
+  posicao: number;
 }
 
 export interface CreateTaskValues {

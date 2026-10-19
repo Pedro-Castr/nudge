@@ -45,12 +45,41 @@ function validateEmptyName(name: unknown) {
   }
 }
 
+async function reorder(userId: string, ids: unknown) {
+  if (!Array.isArray(ids) || ids.some((id) => typeof id !== "string")) {
+    throw new ValidationError({
+      message: "A lista de tarefas é obrigatória.",
+      action: "Envie os ids das tarefas na nova ordem.",
+    });
+  }
+
+  if (new Set(ids).size !== ids.length) {
+    throw new ValidationError({
+      message: "A lista de tarefas tem itens repetidos.",
+      action: "Envie cada tarefa uma única vez.",
+    });
+  }
+
+  const userTasks = await taskRepository.findTasksByUserId(userId);
+  const ownedIds = new Set(userTasks.map((task) => task.id));
+
+  if (!ids.every((id) => ownedIds.has(id))) {
+    throw new ValidationError({
+      message: "A lista contém tarefas inválidas.",
+      action: "Atualize a página e tente novamente.",
+    });
+  }
+
+  await taskRepository.UpdateTaskPositions(userId, ids);
+}
+
 const taskService = {
   create,
   update,
   remove,
   findOneById,
   findTasksByUserId,
+  reorder,
 };
 
 export default taskService;
