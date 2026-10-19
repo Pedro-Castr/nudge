@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "@/components//logo/logo";
+import Logo from "@/components/logo";
 import TaskPreview from "./components/taskPreview";
 
 import styles from "./homePage.module.css";
