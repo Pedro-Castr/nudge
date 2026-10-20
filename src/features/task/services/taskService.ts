@@ -25,7 +25,7 @@ async function createTask(values: CreateTaskValues): Promise<Task> {
   return data;
 }
 
-export async function updateTask(
+async function updateTask(
   id: string,
   changes: UpdateTaskValues,
 ): Promise<Task> {
@@ -44,7 +44,7 @@ export async function updateTask(
   return data;
 }
 
-export async function deleteTask(id: string) {
+async function deleteTask(id: string) {
   const response = await fetch(`${API_URL}/task/${id}`, {
     method: "DELETE",
   });
