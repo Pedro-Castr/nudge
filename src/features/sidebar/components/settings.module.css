@@ -1,0 +1,177 @@
+/* ---------- Botão que abre o painel ---------- */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue-deep);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.trigger:hover {
+  background: var(--mist);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ---------- Painel lateral ---------- */
+
+/* Atenção: não coloque "display" em .sidebar. O navegador esconde o painel
+   fechado com display: none, e um display aqui o deixaria sempre visível. */
+.sidebar {
+  inset: 0 auto 0 0;
+  width: min(380px, 100vw);
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+}
+
+.sidebar:popover-open {
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.22s ease-out;
+}
+
+.sidebar::backdrop {
+  background: rgba(1, 34, 53, 0.45);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 20px 16px 24px;
+  border-bottom: 1px solid var(--edge);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.close:hover {
+  background: var(--mist);
+  color: var(--ink);
+}
+
+/* ---------- Conteúdo ---------- */
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Empurra a área de risco para o fim do painel */
+.danger {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--edge);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.action:hover {
+  background: var(--mist);
+}
+
+.actionDanger {
+  color: #a12626;
+}
+
+.actionDanger:hover {
+  background: #fdecec;
+}
+
+.trigger:focus-visible,
+.close:focus-visible,
+.action:focus-visible {
+  outline: 2px solid var(--blue-deep);
+  outline-offset: 2px;
+}
+
+.trigger:focus-visible {
+  outline-color: #fff;
+}
+
+/* Telas estreitas: o painel ocupa a largura toda, sem cantos arredondados */
+@media (max-width: 380px) {
+  .sidebar {
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar:popover-open {
+    animation: none;
+  }
+
+  .trigger,
+  .action {
+    transition: none;
+  }
+}
