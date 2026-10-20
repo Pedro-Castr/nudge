@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 import { handleError } from "@infra/errors/handleError";
 import { getCurrentUser } from "@/features/auth/services/getCurrentUser";
@@ -46,6 +47,24 @@ export async function GET() {
     }
 
     return NextResponse.json(user);
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function DELETE() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session_id")?.value;
+
+    if (token) {
+      await sessionService.remove(token);
+    }
+
+    const response = NextResponse.json({ success: true });
+    response.cookies.delete("session_id");
+
+    return response;
   } catch (error) {
     return handleError(error);
   }

@@ -31,9 +31,20 @@ async function deleteUser(userId: string) {
   throw new Error(data?.message);
 }
 
+async function logOutUser() {
+  const response = await fetch(`${API_URL}/session`, {
+    method: "DELETE",
+  });
+
+  if (response.ok) return;
+  const data = await response.json().catch(() => null);
+  throw new Error(data?.message);
+}
+
 const SettingsService = {
   updateUser,
   deleteUser,
+  logOutUser,
 };
 
 export default SettingsService;

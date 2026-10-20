@@ -39,6 +39,15 @@ export default function SettingsSidebar({ user }: SettingsSidebarProps) {
     }
   }
 
+  async function handleLogOut() {
+    try {
+      await SettingsService.logOutUser();
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Algo deu errado.");
+    }
+  }
+
   return (
     <>
       <button
@@ -82,7 +91,11 @@ export default function SettingsSidebar({ user }: SettingsSidebarProps) {
               Editar perfil
             </button>
 
-            <button type="button" className={styles.action}>
+            <button
+              type="button"
+              className={styles.action}
+              onClick={handleLogOut}
+            >
               <FaRightFromBracket size={18} aria-hidden="true" />
               Sair
             </button>
