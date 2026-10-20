@@ -16,6 +16,22 @@ async function runInsertQuery(token: string, userId: string, expiresAt: Date) {
   return results.rows[0];
 }
 
+async function runDeleteQuery(sessionId: string) {
+  const results = await database.query({
+    text: `
+        DELETE FROM
+          sessions
+        WHERE
+          id = $1
+        RETURNING
+          *
+      ;`,
+    values: [sessionId],
+  });
+
+  return results.rows[0];
+}
+
 async function runUpdateExpiresQuery(id: string, expiresAt: Date) {
   const results = await database.query({
     text: `
@@ -55,6 +71,7 @@ async function findOneValidByToken(token: string) {
 
 const sessionRepository = {
   runInsertQuery,
+  runDeleteQuery,
   runUpdateExpiresQuery,
   findOneValidByToken,
 };

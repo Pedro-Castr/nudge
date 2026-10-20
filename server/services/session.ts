@@ -18,6 +18,12 @@ async function create(userId: string) {
   return newSesion;
 }
 
+async function remove(token: string) {
+  const session = await findOneValidByToken(token);
+
+  await sessionRepository.runDeleteQuery(session.id);
+}
+
 async function renewIfNeeded(session: SessionOptions): Promise<SessionOptions> {
   const remaining = session.expires_at.getTime() - Date.now();
   const age = EXPIRATION_IN_MILLISECONDS - remaining;
@@ -37,6 +43,7 @@ async function findOneValidByToken(token: string) {
 
 const sessionService = {
   create,
+  remove,
   findOneValidByToken,
   renewIfNeeded,
   EXPIRATION_IN_MILLISECONDS,
