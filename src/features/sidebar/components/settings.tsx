@@ -7,23 +7,16 @@ import SettingsService from "../services/settingsService";
 import type { Profile } from "@/features/sidebar/types/profile";
 import EditProfilePopup from "./editProfilePopup";
 
-import {
-  FaGear,
-  FaRightFromBracket,
-  FaTrashCan,
-  FaUserPen,
-  FaXmark,
-} from "react-icons/fa6";
+import { FaRightFromBracket, FaTrashCan, FaUserPen } from "react-icons/fa6";
 import styles from "./settings.module.css";
 
-const SIDEBAR_ID = "settings-sidebar";
 const EDIT_PROFILE_ID = "edit-profile-popup";
 
-interface SettingsSidebarProps {
+interface SettingsProps {
   user: Profile;
 }
 
-export default function SettingsSidebar({ user }: SettingsSidebarProps) {
+export default function Settings({ user }: SettingsProps) {
   const router = useRouter();
 
   const [error, setError] = useState<string | null>(null);
@@ -50,77 +43,48 @@ export default function SettingsSidebar({ user }: SettingsSidebarProps) {
 
   return (
     <>
-      <button
-        type="button"
-        className={styles.trigger}
-        popoverTarget={SIDEBAR_ID}
-        aria-label="Abrir configurações"
-        title="Configurações"
-      >
-        <FaGear size={18} aria-hidden="true" />
-      </button>
+      <header className={styles.header}>
+        <h2 className={styles.title}>Configurações</h2>
+      </header>
 
-      <aside
-        id={SIDEBAR_ID}
-        popover="auto"
-        className={styles.sidebar}
-        aria-label="Configurações"
-      >
-        <header className={styles.header}>
-          <h2 className={styles.title}>Configurações</h2>
+      <div className={styles.body}>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.action}
+            popoverTarget={EDIT_PROFILE_ID}
+          >
+            <FaUserPen size={18} aria-hidden="true" />
+            Editar perfil
+          </button>
 
           <button
             type="button"
-            className={styles.close}
-            popoverTarget={SIDEBAR_ID}
-            popoverTargetAction="hide"
-            aria-label="Fechar configurações"
+            className={styles.action}
+            onClick={handleLogOut}
           >
-            <FaXmark size={18} aria-hidden="true" />
+            <FaRightFromBracket size={18} aria-hidden="true" />
+            Sair
           </button>
-        </header>
 
-        <div className={styles.body}>
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.action}
-              popoverTarget={EDIT_PROFILE_ID}
-            >
-              <FaUserPen size={18} aria-hidden="true" />
-              Editar perfil
-            </button>
-
-            <button
-              type="button"
-              className={styles.action}
-              onClick={handleLogOut}
-            >
-              <FaRightFromBracket size={18} aria-hidden="true" />
-              Sair
-            </button>
-          </div>
-
-          {error && (
-            <p role="alert" className={styles.popupError}>
-              {error}
-            </p>
-          )}
-
-          <div className={styles.danger}>
-            <button
-              type="button"
-              className={`${styles.action} ${styles.actionDanger}`}
-              onClick={handleDelete}
-            >
-              <FaTrashCan size={18} aria-hidden="true" />
-              Excluir conta
-            </button>
-          </div>
+          <button
+            type="button"
+            className={`${styles.action} ${styles.actionDanger}`}
+            onClick={handleDelete}
+          >
+            <FaTrashCan size={18} aria-hidden="true" />
+            Excluir conta
+          </button>
         </div>
 
-        <EditProfilePopup id={EDIT_PROFILE_ID} user={user} />
-      </aside>
+        {error && (
+          <p role="alert" className={styles.popupError}>
+            {error}
+          </p>
+        )}
+      </div>
+
+      <EditProfilePopup id={EDIT_PROFILE_ID} user={user} />
     </>
   );
 }
