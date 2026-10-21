@@ -9,5 +9,5 @@ export default async function Page() {
 
   const tasks = await taskService.findTasksByUserId(user.id);
 
-  return <TaskPage tasks={tasks} />;
+  return <TaskPage tasks={tasks} user={user} />;
 }

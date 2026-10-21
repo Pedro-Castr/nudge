@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { getCurrentUser } from "@/features/auth/services/getCurrentUser";
+import { requireUser } from "@/features/auth/services/requireUser";
 import { handleError } from "@infra/errors/handleError";
 import taskService from "@server/services/task";
-import { UnauthorizedError } from "@infra/errors/errors";
 
 type RouteContext = {
   params: Promise<{
@@ -13,6 +12,7 @@ type RouteContext = {
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
+    await requireUser();
     const { id } = await context.params;
     const body = await request.json();
 
@@ -26,9 +26,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
 export async function GET(_request: Request, context: RouteContext) {
   try {
-    const user = await getCurrentUser();
-    if (!user) throw new UnauthorizedError();
-
+    await requireUser();
     const { id } = await context.params;
 
     const task = await taskService.findOneById(id);
@@ -41,8 +39,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
 export async function DELETE(_request: Request, context: RouteContext) {
   try {
-    const user = await getCurrentUser();
-    if (!user) throw new UnauthorizedError();
+    await requireUser();
 
     const { id } = await context.params;
 

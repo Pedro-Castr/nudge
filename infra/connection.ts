@@ -1,37 +1,53 @@
-import { Client } from "pg";
+import { Client, Pool } from "pg";
 import { ServiceError } from "./errors/errors";
 
-type QueryObjetcOptions = {
+type QueryObjectOptions = {
   text: string;
   values?: unknown[];
 };
 
-async function query(queryObjetc: QueryObjetcOptions) {
-  let client;
+const connectionConfig = {
+  host: process.env.POSTGRES_HOST,
+  port: Number(process.env.POSTGRES_PORT),
+  user: process.env.POSTGRES_USER,
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  ssl: getSSLValues(),
+};
+
+const globalForPg = globalThis as unknown as { pgPool?: Pool };
+
+const pool = (globalForPg.pgPool ??= createPool());
+
+function createPool() {
+  const newPool = new Pool({
+    ...connectionConfig,
+    max: 3,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 10_000,
+    allowExitOnIdle: true,
+  });
+
+  newPool.on("error", (error) => {
+    console.error("[db] erro em conexão ociosa do pool:", error.message);
+  });
+
+  return newPool;
+}
+
+async function query(queryObject: QueryObjectOptions) {
   try {
-    client = await getNewClient();
-    const result = await client.query(queryObjetc);
-    return result;
+    return await pool.query(queryObject);
   } catch (error) {
-    const ServiceErrorObject = new ServiceError({
+    throw new ServiceError({
       message: "Erro na conexão com Banco ou na Query.",
       cause: error,
     });
-    throw ServiceErrorObject;
-  } finally {
-    await client?.end();
   }
 }
 
 async function getNewClient() {
-  const client = new Client({
-    host: process.env.POSTGRES_HOST,
-    port: Number(process.env.POSTGRES_PORT),
-    user: process.env.POSTGRES_USER,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    ssl: getSSLValues(),
-  });
+  const client = new Client(connectionConfig);
 
   await client.connect();
   return client;

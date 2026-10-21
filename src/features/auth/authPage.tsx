@@ -18,9 +18,7 @@ export function AuthPage() {
     }
 
     await authService.loginUser(values);
-
     router.push("/task");
-    router.refresh();
   }
 
   return (

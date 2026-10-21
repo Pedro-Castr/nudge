@@ -1,6 +1,6 @@
 import TaskCompose from "./components/taskCompose";
 import TaskList from "./components/taskList";
-import { getCurrentUser } from "../auth/services/getCurrentUser";
+import { Profile } from "../sidebar/types/profile";
 import type { Task } from "./types/task";
 
 import styles from "./taskPage.module.css";
@@ -8,11 +8,10 @@ import SidebarPage from "../sidebar/sidebarPage";
 
 interface TaskPageProps {
   tasks: Task[];
+  user: Profile;
 }
 
-export default async function TaskPage({ tasks }: TaskPageProps) {
-  const user = await getCurrentUser();
-
+export default function TaskPage({ tasks, user }: TaskPageProps) {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
