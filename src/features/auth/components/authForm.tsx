@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { getErrorText } from "@/lib/api";
 import { type Mode, type AuthValues } from "@/features/auth/types/auth";
 
 import styles from "./authForm.module.css";
@@ -83,7 +84,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     try {
       await onSubmit?.(view, values);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado");
+      setError(getErrorText(err));
     } finally {
       setSubmitting(false);
     }

@@ -4,6 +4,7 @@ import { useRef, useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa6";
 
+import { getErrorText } from "@/lib/api";
 import taskService from "@/features/task/services/taskService";
 import styles from "./taskCompose.module.css";
 
@@ -35,7 +36,7 @@ export default function TaskCompose() {
       nomeRef.current?.focus();
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     } finally {
       setSubmitting(false);
     }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 
+import { getErrorText } from "@/lib/api";
 import taskService from "../services/taskService";
 import type { Task } from "@/features/task/types/task";
 import TaskItem from "./taskItem";
@@ -81,7 +82,7 @@ export default function TaskList({ tasks }: TaskListProps) {
           await taskService.reorderTasks(ids);
         } catch (err) {
           setOrderedIds(previousIds);
-          setError(err instanceof Error ? err.message : "Algo deu errado.");
+          setError(getErrorText(err));
           router.refresh();
         } finally {
           setSaving(false);
