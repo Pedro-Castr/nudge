@@ -3,6 +3,7 @@
 import { useState, useRef, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { getErrorText } from "@/lib/api";
 import SettingsService from "../services/settingsService";
 import { getChanges } from "@/features/sidebar/utils/getChanges";
 import type { Profile } from "@/features/sidebar/types/profile";
@@ -59,7 +60,7 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
       closePopup();
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     } finally {
       setSaving(false);
     }

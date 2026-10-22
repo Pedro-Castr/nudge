@@ -1,9 +1,11 @@
+import { apiFetch } from "@/lib/api";
+
 import type { AuthValues } from "@/features/auth/types/auth";
 
 const API_URL = "/api";
 
-async function registerUser(values: AuthValues) {
-  const response = await fetch(`${API_URL}/users`, {
+const registerUser = (values: AuthValues) =>
+  apiFetch(`${API_URL}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -15,17 +17,8 @@ async function registerUser(values: AuthValues) {
     }),
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message ?? "Não foi possível criar a conta.");
-  }
-
-  return data;
-}
-
-async function loginUser(values: AuthValues) {
-  const response = await fetch(`${API_URL}/session`, {
+const loginUser = (values: AuthValues) =>
+  apiFetch(`${API_URL}/session`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -35,15 +28,6 @@ async function loginUser(values: AuthValues) {
       senha: values.senha,
     }),
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message ?? "Não foi possível acessar a conta.");
-  }
-
-  return data;
-}
 
 const authService = {
   registerUser,

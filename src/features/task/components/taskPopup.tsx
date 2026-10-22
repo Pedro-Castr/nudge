@@ -4,6 +4,7 @@ import { useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FaPencil, FaTrashCan, FaXmark } from "react-icons/fa6";
 
+import { getErrorText } from "@/lib/api";
 import taskService from "@/features/task/services/taskService";
 import { getChanges } from "@/features/task/utils/getChanges";
 import type { Task } from "@/features/task/types/task";
@@ -56,7 +57,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
       setEditing(false);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     } finally {
       setSaving(false);
     }
@@ -69,7 +70,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
       await taskService.deleteTask(task.id);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     }
   }
 

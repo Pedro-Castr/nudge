@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaCheck, FaArrowRotateLeft } from "react-icons/fa6";
 import { LuGrip } from "react-icons/lu";
 
+import { getErrorText } from "@/lib/api";
 import taskService from "@/features/task/services/taskService";
 import TaskPopup from "./taskPopup";
 import type { Task } from "@/features/task/types/task";
@@ -23,7 +24,7 @@ export default function TaskItem({
 }: TaskItemProps) {
   const router = useRouter();
 
-  const [toggleError, setToggleError] = useState<string | null>(null);
+  const [Error, setError] = useState<string | null>(null);
   const [isRefreshing, startTransition] = useTransition();
   const [completing, setCompleting] = useState(false);
 
@@ -31,13 +32,13 @@ export default function TaskItem({
     if (completing) return;
 
     setCompleting(true);
-    setToggleError(null);
+    setError(null);
 
     try {
       await taskService.updateTask(task.id, { concluida: !task.concluida });
       startTransition(() => router.refresh());
     } catch (err) {
-      setToggleError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     } finally {
       setCompleting(false);
     }
@@ -66,9 +67,9 @@ export default function TaskItem({
 
       <div className={styles.text}>
         <span className={styles.nome}>{task.nome}</span>
-        {toggleError && (
+        {Error && (
           <span role="alert" className={styles.cardError}>
-            {toggleError}
+            {Error}
           </span>
         )}
       </div>

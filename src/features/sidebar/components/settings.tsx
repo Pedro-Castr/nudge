@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { getErrorText } from "@/lib/api";
 import SettingsService from "../services/settingsService";
 import type { Profile } from "@/features/sidebar/types/profile";
 import EditProfilePopup from "./editProfilePopup";
@@ -28,7 +29,7 @@ export default function Settings({ user }: SettingsProps) {
       await SettingsService.deleteUser(user.id);
       router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     }
   }
 
@@ -37,7 +38,7 @@ export default function Settings({ user }: SettingsProps) {
       await SettingsService.logOutUser();
       router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(getErrorText(err));
     }
   }
 
