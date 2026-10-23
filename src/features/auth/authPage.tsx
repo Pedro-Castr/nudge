@@ -23,15 +23,15 @@ export function AuthPage() {
   }
 
   return (
-    <main className={styles.auth}>
-      <Link
-        href="/"
-        className={styles.logoLink}
-        aria-label="Voltar para o início"
-      >
-        <Logo />
-      </Link>
-      <AuthForm onSubmit={handleAuthSubmit} />
-    </main>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <Link href="/" className={styles.home}>
+          <Logo size={28} />
+        </Link>
+      </header>
+      <main className={styles.main}>
+        <AuthForm onSubmit={handleAuthSubmit} />
+      </main>
+    </div>
   );
 }

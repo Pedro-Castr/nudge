@@ -1,99 +1,97 @@
 import Link from "next/link";
+import { FaArrowRight, FaCheck, FaGripVertical } from "react-icons/fa6";
 import Logo from "@/components/logo";
-import TaskPreview from "./components/taskPreview";
-
 import styles from "./homePage.module.css";
 
-const PROMISES = [
-  "Anote em segundos",
-  "Arraste para priorizar",
-  "Lembrete na hora certa",
+const steps = [
+  { titulo: "Anote", resto: "em segundos." },
+  { titulo: "Arraste", resto: "para pôr em ordem." },
+  { titulo: "Conclua", resto: "e respire." },
 ];
 
-const STEPS = [
-  {
-    title: "Anote em segundos",
-    text: "Digite a tarefa, escolha quando quer ser lembrado e pronto. Sem formulário longo no caminho.",
-  },
-  {
-    title: "Arraste para priorizar",
-    text: "Coloque o que importa no topo só arrastando. A ordem da lista é a ordem de prioridade.",
-  },
-  {
-    title: "Seja lembrado na hora certa",
-    text: "O nudge avisa no horário que você definiu, para a tarefa não passar batida.",
-  },
-];
-
-export function HomePage() {
+function PreviewCard({ nome, dragging }: { nome: string; dragging?: boolean }) {
   return (
-    <main className={styles.home}>
+    <li className={`${styles.card} ${dragging ? styles.dragging : ""}`}>
+      <span className={styles.handle}>
+        <FaGripVertical />
+      </span>
+      <span className={styles.name}>{nome}</span>
+      <span className={styles.check}>
+        <FaCheck />
+      </span>
+    </li>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <div className={styles.page}>
       <header className={styles.header}>
-        <Logo />
-        <Link href="/auth" className={styles.headerLink}>
+        <Logo size={28} />
+        <Link href="/auth" className={styles.signIn}>
           Entrar
         </Link>
       </header>
 
-      <section className={styles.brand}>
-        <div className={styles.brandDots} />
-        <div className={styles.brandRipples} aria-hidden="true">
-          <span className={styles.ripple} />
-          <span className={`${styles.ripple} ${styles.ripple2}`} />
-          <span className={`${styles.ripple} ${styles.ripple3}`} />
-        </div>
-
-        <div className={styles.brandContent}>
-          <h1 className={styles.brandTitle}>
-            Um empurrãozinho para você nunca esquecer.
+      <main>
+        <section className={styles.hero}>
+          <h1 className={styles.title}>
+            Um <em>empurrãozinho</em> para você nunca esquecer.
           </h1>
-          <p className={styles.brandText}>
-            Anote em segundos, arraste para decidir o que vem primeiro e deixe o
-            resto com a gente.
+          <p className={styles.lead}>
+            Uma lista de tarefas calma e sem ruído: anote, organize do seu jeito
+            e siga o seu dia.
           </p>
           <Link href="/auth" className={styles.cta}>
-            Entrar ou criar conta
+            Criar minha lista
+            <FaArrowRight aria-hidden="true" />
           </Link>
-          <TaskPreview />
-        </div>
 
-        <ul className={styles.promises}>
-          {PROMISES.map((promise) => (
-            <li key={promise}>{promise}</li>
-          ))}
-        </ul>
-      </section>
+          <div className={styles.preview} aria-hidden="true">
+            <ul className={styles.previewList}>
+              <PreviewCard nome="Marcar o dentista" />
+              <PreviewCard nome="Ligar para a vovó antes das 18h" dragging />
+              <li className={styles.slot} />
+              <PreviewCard nome="Comprar café" />
+            </ul>
+          </div>
+        </section>
 
-      <section className={styles.steps} aria-labelledby="como-funciona">
-        <h2 id="como-funciona" className={styles.sectionTitle}>
-          Como funciona
-        </h2>
-        <ol className={styles.stepList}>
-          {STEPS.map((step, index) => (
-            <li key={step.title} className={styles.step}>
-              <span className={styles.stepNumber}>{index + 1}</span>
-              <h3 className={styles.stepTitle}>{step.title}</h3>
-              <p className={styles.stepText}>{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className={styles.final}>
-        <h2 className={styles.sectionTitle}>
-          Pronto para o primeiro empurrãozinho?
-        </h2>
-        <p className={styles.brandText}>
-          Crie sua conta em menos de um minuto e comece a anotar.
-        </p>
-        <Link href="/auth" className={styles.cta}>
-          Criar minha conta
-        </Link>
-      </section>
+        <section className={styles.steps} aria-label="Como funciona">
+          <ol className={styles.stepsList}>
+            {steps.map((s, i) => (
+              <li key={s.titulo} className={styles.step}>
+                <span className={styles.num}>{i + 1}</span>
+                <p>
+                  <strong>{s.titulo}</strong> {s.resto}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </main>
 
       <footer className={styles.footer}>
-        © {new Date().getFullYear()} nudge
+        <div className={styles.footerInner}>
+          <h2 className={styles.footerTitle}>
+            Pronto para o primeiro empurrão?
+          </h2>
+          <p className={styles.footerLead}>
+            Criar sua conta leva menos de um minuto.
+          </p>
+          <Link href="/auth" className={styles.ctaLight}>
+            Começar agora
+            <FaArrowRight aria-hidden="true" />
+          </Link>
+          <div className={styles.footerBottom}>
+            <span>© Nudge</span>
+            <nav className={styles.footerLinks} aria-label="Links legais">
+              <Link href="/termos">Termos</Link>
+              <Link href="/privacidade">Privacidade</Link>
+            </nav>
+          </div>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
