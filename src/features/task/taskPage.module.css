@@ -1,30 +1,51 @@
-.layout {
+.page {
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
 }
 
 .header {
-  --corner: clamp(16px, 3vw, 28px);
-
-  display: flex;
-  justify-content: flex-start;
-  padding: var(--corner) var(--corner) 0;
+  padding: var(--space-5) var(--gutter) 0;
 }
 
-.page {
-  flex: 1;
+.settingsButton {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  box-shadow:
+    var(--shadow-sm),
+    0 0 0 1px var(--color-border);
+  transition:
+    color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+.settingsButton svg {
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.settingsButton:hover {
+  color: var(--color-primary);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px var(--color-border-strong);
+}
+
+.settingsButton:hover svg {
+  transform: rotate(45deg);
+}
+
+.main {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-top: 24px;
-  padding-bottom: clamp(24px, 6vh, 64px);
-}
-
-@media (max-width: 640px) {
-  .page {
-    gap: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--gutter) var(--space-24);
 }

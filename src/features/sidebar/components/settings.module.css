@@ -1,76 +1,73 @@
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 20px 16px 24px;
-  border-bottom: 1px solid var(--edge);
+  /* espaço para o X de fechar, que fica no canto da sidebar */
+  padding-right: 3rem;
 }
 
 .title {
-  margin: 0;
-  font-size: 20px;
-  line-height: 1.25;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
 }
 
 .body {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 16px;
-  overflow-y: auto;
+  gap: var(--space-4);
 }
 
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-2);
 }
 
 .action {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-4);
   width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
+  min-height: 3.25rem;
+  padding: 0 var(--space-4);
   border: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
   text-align: left;
-  cursor: pointer;
-  transition: background 0.15s ease;
+  transition:
+    background var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.action svg {
+  flex: none;
+  color: var(--color-on-primary-soft);
+  transition: color var(--dur) var(--ease-out);
 }
 
 .action:hover {
-  background: var(--mist);
+  background: var(--color-surface-3);
 }
 
+/* Perigoso: separado no fim, em tom de risco */
 .actionDanger {
-  color: #a12626;
+  color: var(--color-danger);
+}
+
+.actionDanger svg {
+  color: currentColor;
 }
 
 .actionDanger:hover {
-  background: #fdecec;
+  background: var(--color-danger-soft);
+  color: var(--color-danger-hover);
 }
 
-.close:focus-visible,
-.action:focus-visible {
-  outline: 2px solid var(--blue-deep);
-  outline-offset: 2px;
-}
-
-.trigger:focus-visible {
-  outline-color: #fff;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .action {
-    transition: none;
-  }
+.popupError {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-soft);
+  color: var(--color-danger-hover);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }

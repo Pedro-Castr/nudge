@@ -1,154 +1,173 @@
-/* Atenção: não coloque "display" em .popup. O navegador esconde o pop-up
-   fechado com display: none, e um display aqui o deixaria sempre visível. */
+/* display só quando aberto */
 .popup {
-  width: min(440px, calc(100vw - 32px));
-  padding: 24px;
-  border: 0;
+  margin: auto;
+  width: min(440px, calc(100% - 2 * var(--gutter)));
+  max-height: min(90dvh, 640px);
+  padding: var(--space-6);
   border-radius: var(--radius-xl);
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: var(--shadow-card);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
 }
 
 .popup:popover-open {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  animation: popupIn 0.18s ease-out;
+  gap: var(--space-5);
+  animation: pop var(--dur) var(--ease-out);
 }
 
-/* O painel lateral já escurece a página: aqui o escurecimento é mais leve */
 .popup::backdrop {
-  background: rgba(1, 34, 53, 0.3);
+  background: var(--color-overlay, rgb(12 26 66 / 0.4));
+  animation: fade var(--dur) var(--ease-out);
 }
 
 .title {
-  margin: 0;
-  padding-right: 32px;
-  font-size: 20px;
-  line-height: 1.25;
+  padding-right: 3rem; /* espaço para o X */
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+}
+
+.close {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-3);
+  color: var(--color-text-muted);
+  transition:
+    background var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.close:hover {
+  background: var(--color-primary-soft-hover);
+  color: var(--color-text);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-5);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }
 
 .input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--edge);
+  height: 3.25rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-control);
   border-radius: var(--radius-md);
-  background: #fff;
-  color: var(--ink);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 400;
+  background: var(--color-surface-2);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  transition:
+    border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
+    background var(--dur) var(--ease-out);
 }
 
-.input:focus-visible {
-  outline: 2px solid var(--blue-deep);
-  outline-offset: 1px;
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--ring);
 }
 
 .hint {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-subtle);
+}
+
+.popupError {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-soft);
+  color: var(--color-danger-hover);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }
 
 .footer {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 4px;
-  padding-top: 16px;
-  border-top: 1px solid var(--edge);
+  gap: var(--space-3);
 }
 
 .button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 16px;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 var(--space-6);
   border: 0;
-  border-radius: var(--radius-md);
-  background: var(--mist);
-  color: var(--ink);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-on-primary-soft);
+  font-weight: var(--weight-semibold);
+  transition:
+    background var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
 }
 
 .button:hover {
-  background: var(--edge);
+  background: var(--color-primary-soft-hover);
 }
 
 .primary {
-  background: var(--blue-deep);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-primary);
 }
 
 .primary:hover {
-  background: var(--blue-deeper);
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
-.close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.close:hover {
-  background: var(--mist);
-  color: var(--ink);
-}
-
-.button:focus-visible,
-.close:focus-visible {
-  outline: 2px solid var(--blue-deep);
-  outline-offset: 2px;
-}
-
-@keyframes popupIn {
+@keyframes pop {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(8px) scale(0.97);
   }
 }
 
-/* No celular, 16px evita o zoom automático do Safari ao focar o campo */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 640px) {
+  .popup {
+    padding: var(--space-5);
+  }
+
+  .close {
+    top: var(--space-4);
+    right: var(--space-4);
+  }
+
   .input {
     font-size: 16px;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .popup:popover-open {
-    animation: none;
+  .footer > * {
+    flex: 1;
   }
 }

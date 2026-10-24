@@ -1,231 +1,288 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { getErrorText } from "@/lib/api";
-import { type Mode, type AuthValues } from "@/features/auth/types/auth";
+import Link from "next/link";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type InputHTMLAttributes,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
+import type { Mode, AuthValues } from "../types/auth";
 
 import styles from "./authForm.module.css";
 
-type Phase = "idle" | "out" | "in";
-type Direction = "forward" | "back";
-
-const TRANSITION_MS = 150;
-
-const PANEL_CLASS: Record<Exclude<Phase, "idle">, Record<Direction, string>> = {
-  out: { forward: styles.outForward, back: styles.outBack },
-  in: { forward: styles.inForward, back: styles.inBack },
+type AuthFormProps = {
+  onSubmit?: (mode: Mode, values: AuthValues) => void | Promise<void>;
 };
 
-interface AuthFormProps {
-  onSubmit?: (mode: Mode, values: AuthValues) => void | Promise<void>;
+const TABS: { mode: Mode; label: string }[] = [
+  { mode: "login", label: "Entrar" },
+  { mode: "signup", label: "Criar conta" },
+];
+
+function PasswordField({
+  id,
+  name = "senha",
+  autoComplete,
+  minLength,
+  hint,
+  aside,
+}: {
+  id: string;
+  name?: string;
+  autoComplete: string;
+  minLength?: number;
+  hint?: string;
+  aside?: ReactNode;
+}) {
+  const [visible, setVisible] = useState(false);
+  const hintId = `${id}-hint`;
+
+  return (
+    <div className={styles.field}>
+      <div className={styles.labelRow}>
+        <label htmlFor={id} className={styles.label}>
+          Senha
+        </label>
+        {aside}
+      </div>
+      <div className={styles.passwordWrap}>
+        <input
+          id={id}
+          name={name}
+          type={visible ? "text" : "password"}
+          className={`${styles.input} ${styles.passwordInput}`}
+          autoComplete={autoComplete}
+          minLength={minLength}
+          aria-describedby={hint ? hintId : undefined}
+          required
+        />
+        <button
+          type="button"
+          className={styles.toggle}
+          aria-controls={id}
+          aria-pressed={visible}
+          onClick={() => setVisible((v) => !v)}
+        >
+          {visible ? "Ocultar" : "Mostrar"}
+        </button>
+      </div>
+      {hint && (
+        <p id={hintId} className={styles.hint}>
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function SubmitButton({
+  submitting,
+  label,
+  busyLabel,
+}: {
+  submitting: boolean;
+  label: string;
+  busyLabel: string;
+}) {
+  return (
+    <button
+      type="submit"
+      className={styles.submit}
+      disabled={submitting}
+      aria-busy={submitting}
+    >
+      {submitting && <span className={styles.spinner} aria-hidden="true" />}
+      {submitting ? busyLabel : label}
+    </button>
+  );
 }
 
 export default function AuthForm({ onSubmit }: AuthFormProps) {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>();
-
   const uid = useId();
   const [mode, setMode] = useState<Mode>("login");
-  const [view, setView] = useState<Mode>("login");
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [direction, setDirection] = useState<Direction>("forward");
   const [submitting, setSubmitting] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [values, setValues] = useState<AuthValues>({
-    nome: "",
-    email: "",
-    senha: "",
-  });
-  const timers = useRef<number[]>([]);
-  const isLogin = view === "login";
-  const [error, setError] = useState<string | null>(null);
+  const [height, setHeight] = useState<number>();
+  const loginRef = useRef<HTMLDivElement>(null);
+  const signupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = panelRef.current;
+    const el = mode === "login" ? loginRef.current : signupRef.current;
     if (!el) return;
+    const measure = () => setHeight(el.offsetHeight);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [mode]);
 
-    const observer = new ResizeObserver(() => setHeight(el.offsetHeight));
-    observer.observe(el);
+  const tabId = (m: Mode) => `${uid}-tab-${m}`;
+  const panelId = (m: Mode) => `${uid}-panel-${m}`;
 
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const pending = timers.current;
-    return () => pending.forEach((id) => window.clearTimeout(id));
-  }, []);
-
-  function changeMode(next: Mode) {
-    if (next === mode || phase !== "idle") return;
-
+  function handleTabKey(e: KeyboardEvent<HTMLDivElement>) {
+    let next: Mode | null = null;
+    if (e.key === "ArrowRight" || e.key === "End") next = "signup";
+    if (e.key === "ArrowLeft" || e.key === "Home") next = "login";
+    if (!next) return;
+    e.preventDefault();
     setMode(next);
-    setDirection(next === "signup" ? "forward" : "back");
-    setPhase("out");
-    setError(null);
-
-    const swap = window.setTimeout(() => {
-      setView(next);
-      setPhase("in");
-
-      const done = window.setTimeout(() => setPhase("idle"), TRANSITION_MS);
-      timers.current.push(done);
-    }, TRANSITION_MS);
-    timers.current.push(swap);
+    document.getElementById(tabId(next))?.focus();
   }
 
-  function setField<K extends keyof AuthValues>(key: K, value: AuthValues[K]) {
-    setValues((prev) => ({ ...prev, [key]: value }));
-  }
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSubmit(e: FormEvent<HTMLFormElement>, formMode: Mode) {
+    e.preventDefault();
+    if (submitting) return;
+    const data = new FormData(e.currentTarget);
+    const values: AuthValues = {
+      nome: String(data.get("nome") ?? ""),
+      email: String(data.get("email") ?? ""),
+      senha: String(data.get("senha") ?? ""),
+    };
     setSubmitting(true);
-    setError(null);
     try {
-      await onSubmit?.(view, values);
-    } catch (err) {
-      setError(getErrorText(err));
+      if (onSubmit) await onSubmit(formMode, values);
     } finally {
       setSubmitting(false);
     }
   }
 
-  const panelClass = phase === "idle" ? "" : PANEL_CLASS[phase][direction];
-
   return (
-    <section className={styles.formSide}>
-      {error && (
-        <p role="alert" className={styles.error}>
-          {error}
-        </p>
-      )}
-
-      <div className={styles.card}>
-        <div className={styles.tabs}>
+    <div className={styles.root} data-mode={mode}>
+      <div
+        className={styles.tabs}
+        role="tablist"
+        aria-label="Acesso ao Nudge"
+        onKeyDown={handleTabKey}
+      >
+        <span className={styles.indicator} aria-hidden="true" />
+        {TABS.map((t) => (
           <button
+            key={t.mode}
+            id={tabId(t.mode)}
             type="button"
-            className={styles.tabsBtn}
-            aria-pressed={mode === "login"}
-            onClick={() => changeMode("login")}
+            role="tab"
+            className={styles.tab}
+            aria-selected={mode === t.mode}
+            aria-controls={panelId(t.mode)}
+            tabIndex={mode === t.mode ? 0 : -1}
+            disabled={submitting}
+            onClick={() => setMode(t.mode)}
           >
-            Entrar
+            {t.label}
           </button>
-          <button
-            type="button"
-            className={styles.tabsBtn}
-            aria-pressed={mode === "signup"}
-            onClick={() => changeMode("signup")}
+        ))}
+      </div>
+
+      <div
+        className={styles.viewport}
+        style={height ? { height: height + 8 } : undefined}
+      >
+        <div className={styles.track}>
+          <div
+            ref={loginRef}
+            id={panelId("login")}
+            role="tabpanel"
+            aria-labelledby={tabId("login")}
+            className={styles.panel}
+            aria-hidden={mode !== "login"}
+            inert={mode !== "login"}
           >
-            Criar conta
-          </button>
-        </div>
-
-        <div
-          className={`${styles.panelWrap} ${phase !== "idle" ? styles.animating : ""}`}
-          style={height === undefined ? undefined : { height }}
-        >
-          <div ref={panelRef} className={`${styles.panel} ${panelClass}`}>
-            <header className={styles.cardHead}>
-              <h2>{isLogin ? "Que bom te ver de novo" : "Crie sua conta"}</h2>
-              <p>
-                {isLogin
-                  ? "Entre para ver o que está esperando por você."
-                  : "Leva menos de um minuto. Depois é só anotar."}
-              </p>
-            </header>
-
-            <form className={styles.form} onSubmit={handleSubmit}>
-              {!isLogin && (
-                <div className={styles.field}>
-                  <label htmlFor={`${uid}-nome`}>Nome</label>
-                  <input
-                    id={`${uid}-nome`}
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Como devemos te chamar?"
-                    required
-                    value={values.nome}
-                    onChange={(e) => setField("nome", e.target.value)}
-                  />
-                </div>
-              )}
-
+            <form
+              className={styles.form}
+              onSubmit={(e) => handleSubmit(e, "login")}
+            >
+              <h2 className={styles.title}>Que bom te ver de novo</h2>
               <div className={styles.field}>
-                <label htmlFor={`${uid}-email`}>E-mail</label>
+                <label htmlFor={`${uid}-login-email`} className={styles.label}>
+                  E-mail
+                </label>
                 <input
-                  id={`${uid}-email`}
+                  id={`${uid}-login-email`}
+                  className={styles.input}
+                  name="email"
                   type="email"
-                  autoComplete="email"
-                  placeholder="voce@exemplo.com"
-                  required
-                  value={values.email}
-                  onChange={(e) => setField("email", e.target.value)}
+                />
+              </div>
+
+              <PasswordField
+                id={`${uid}-login-senha`}
+                autoComplete="current-password"
+                aside={
+                  <Link href="/esqueci-senha" className={styles.forgot}>
+                    Esqueci minha senha
+                  </Link>
+                }
+              />
+              <SubmitButton
+                submitting={submitting && mode === "login"}
+                label="Entrar"
+                busyLabel="Entrando…"
+              />
+            </form>
+          </div>
+
+          <div
+            ref={signupRef}
+            id={panelId("signup")}
+            role="tabpanel"
+            aria-labelledby={tabId("signup")}
+            className={styles.panel}
+            aria-hidden={mode !== "signup"}
+            inert={mode !== "signup"}
+          >
+            <form
+              className={styles.form}
+              onSubmit={(e) => handleSubmit(e, "signup")}
+            >
+              <h2 className={styles.title}>Crie sua conta</h2>
+              <div className={styles.field}>
+                <label htmlFor={`${uid}-signup-nome`} className={styles.label}>
+                  Nome
+                </label>
+                <input
+                  id={`${uid}-signup-nome`}
+                  className={styles.input}
+                  name="nome"
+                  type="text"
                 />
               </div>
 
               <div className={styles.field}>
-                <div className={styles.fieldRow}>
-                  <label htmlFor={`${uid}-senha`}>Senha</label>
-                  {isLogin && (
-                    <a className={styles.fieldLink} href="/recuperar-senha">
-                      Esqueci minha senha
-                    </a>
-                  )}
-                </div>
-                <div className={styles.fieldPassword}>
-                  <input
-                    id={`${uid}-senha`}
-                    type={showPassword ? "text" : "password"}
-                    autoComplete={isLogin ? "current-password" : "new-password"}
-                    placeholder="Sua senha"
-                    required
-                    minLength={isLogin ? undefined : 8}
-                    value={values.senha}
-                    onChange={(e) => setField("senha", e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    className={styles.fieldToggle}
-                    onClick={() => setShowPassword((v) => !v)}
-                  >
-                    {showPassword ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-                {!isLogin && (
-                  <span className={styles.fieldHint}>
-                    Use pelo menos 8 caracteres.
-                  </span>
-                )}
+                <label htmlFor={`${uid}-signup-email`} className={styles.label}>
+                  E-mail
+                </label>
+                <input
+                  id={`${uid}-signup-email`}
+                  className={styles.input}
+                  name="email"
+                  type="email"
+                />
               </div>
 
-              <button
-                type="submit"
-                className={styles.submit}
-                disabled={submitting}
-              >
-                {isLogin ? "Entrar" : "Criar conta"}
-              </button>
-
-              {!isLogin && (
-                <p className={styles.terms}>
-                  Ao criar a conta, você concorda com os Termos de uso e a
-                  Política de privacidade.
-                </p>
-              )}
+              <PasswordField
+                id={`${uid}-signup-senha`}
+                autoComplete="new-password"
+                minLength={8}
+                hint="Use pelo menos 8 caracteres"
+              />
+              <SubmitButton
+                submitting={submitting && mode === "signup"}
+                label="Criar conta"
+                busyLabel="Criando conta…"
+              />
+              <p className={styles.legal}>
+                Ao criar sua conta, você concorda com os{" "}
+                <Link href="/termos">Termos de uso</Link> e a{" "}
+                <Link href="/privacidade">Política de privacidade</Link>.
+              </p>
             </form>
-
-            <p className={styles.switchRow}>
-              <span>{isLogin ? "Ainda não tem conta?" : "Já tem conta?"}</span>
-              <button
-                type="button"
-                onClick={() => changeMode(isLogin ? "signup" : "login")}
-              >
-                {isLogin ? "Criar conta" : "Entrar"}
-              </button>
-            </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

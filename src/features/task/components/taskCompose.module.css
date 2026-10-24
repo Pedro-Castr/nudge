@@ -1,224 +1,149 @@
-.composer {
-  /* Referência para o painel de detalhes flutuar, e acima da lista */
+.root {
   position: relative;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  /* Nunca encosta nas bordas, como a lista de tarefas */
-  width: min(560px, calc(100% - 32px));
-  margin-inline: auto;
-}
-
-/* ---------- Pílula: bolinha + campo + botão ---------- */
-
-.pill {
+  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
-  gap: 10px;
-  /* 8px à direita: o botão fica à mesma distância do topo, da base e da borda */
-  padding: 0 8px 0 18px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: var(--shadow-soft);
-  transition: box-shadow 0.2s ease;
-}
-
-.pill:focus-within {
+  gap: var(--space-2);
+  width: 100%;
+  max-width: var(--content-max);
+  min-height: 3.5rem;
+  padding: 6px 6px 6px var(--space-6);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
   box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.7),
-    var(--shadow-soft);
+    var(--shadow-md),
+    0 0 0 1px var(--color-border);
+  transition: box-shadow var(--dur) var(--ease-out);
 }
 
-/* Eco da logo: a bolinha pequena e apagada, antes do círculo cheio (o botão) */
-.dot {
-  flex: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--blue-deep);
-  opacity: 0.45;
-  transition: opacity 0.2s ease;
-}
-
-/* Com texto nos detalhes, a bolinha fica cheia: avisa que há algo escrito
-   mesmo com o painel fechado (apague esta regra se não quiser o aviso) */
-.composer:has(.textarea:not(:placeholder-shown)) .dot {
-  opacity: 1;
-}
-
-.field {
-  flex: 1;
-  display: block;
-  min-width: 0;
+.root:focus-within {
+  box-shadow:
+    0 0 0 2px var(--color-primary),
+    0 0 0 6px rgb(var(--primary-rgb) / 0.18),
+    var(--shadow-md);
 }
 
 .input {
-  width: 100%;
-  height: 52px;
-  padding: 0;
+  flex: 1;
+  min-width: 0;
+  height: 2.75rem;
   border: 0;
   background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 15px;
+  font-size: var(--text-md);
   outline: none;
 }
 
-.input::placeholder,
-.textarea::placeholder {
-  color: var(--muted);
-  font-weight: 400;
+.input::placeholder {
+  color: var(--color-text-subtle);
 }
 
-/* Mesmo tamanho do botão de concluir da tarefa */
-.submit {
+.add {
   flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 0;
-  border-radius: 40%;
-  background: var(--blue-deep);
-  color: #fff;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-primary);
   transition:
-    background 0.15s ease,
-    transform 0.15s ease;
+    transform var(--dur) var(--ease-spring),
+    background var(--dur) var(--ease-out);
 }
 
-.submit:hover {
-  background: var(--blue-deeper);
+.add svg {
+  transition: transform var(--dur) var(--ease-spring);
 }
 
-.submit:active {
-  transform: scale(0.92);
+.add:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.06);
 }
 
-.submit:focus-visible {
-  outline: 2px solid var(--blue-deeper);
-  outline-offset: 2px;
+.add:hover svg {
+  transform: rotate(90deg);
 }
 
-/* ---------- Detalhes: flutuam sobre a lista, sem empurrá-la ---------- */
+.add:active {
+  background: var(--color-primary-active);
+  transform: scale(0.96);
+}
 
-/* Fora do fluxo: não ocupa espaço, então nada abaixo se mexe.
-   O visibility esconde o campo do teclado e de leitores de tela enquanto fechado. */
+/* Painel flutuante: não empurra a lista */
 .details {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  padding-top: 8px;
+  top: calc(100% + var(--space-3));
+  left: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--color-border);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-6px);
-  pointer-events: none;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top center;
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease,
-    visibility 0.2s;
+    opacity var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out),
+    visibility 0s linear var(--dur);
 }
 
-/* Abre enquanto qualquer parte do formulário tem foco */
-.composer:focus-within .details {
+.root:focus-within .details {
   opacity: 1;
   visibility: visible;
   transform: none;
-  pointer-events: auto;
+  transition-delay: 0s;
 }
 
-.detailsField {
-  display: block;
+.detailsLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
 }
 
 .textarea {
-  display: block;
   width: 100%;
-  padding: 10px 16px;
-  border: 0;
-  border-radius: 16px;
-  background: #fff;
-  color: var(--ink);
-  font: inherit;
-  font-size: 14px;
-  line-height: 1.4;
-  resize: none;
-  /* Sombra mais forte: ele está por cima da lista */
-  box-shadow: var(--shadow-card);
-  outline: none;
-  transition: box-shadow 0.2s ease;
+  min-height: 5.5rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  resize: vertical;
+  transition:
+    border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
+    background var(--dur) var(--ease-out);
 }
 
 .textarea:focus {
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.7),
-    var(--shadow-card);
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--ring);
 }
 
-/* Rótulo só para leitores de tela; o placeholder faz o papel visual */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-.error {
-  margin: 0 0 8px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #fdecec;
-  color: #a12626;
-  font-size: 14px;
-  font-weight: 500;
-  box-shadow: var(--shadow-card);
-}
-
-.submit:disabled {
-  opacity: 0.6;
-  cursor: progress;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pill,
-  .dot,
-  .submit,
-  .details,
-  .textarea {
-    transition: none;
-  }
-}
-
-/* ---------- Tamanhos por tela ---------- */
-/* Ficam por último para vencer as regras acima, que têm a mesma especificidade */
-
-/* Celular: mais alto, botão igual ao de concluir do celular (40px) */
 @media (max-width: 640px) {
-  .input {
-    height: 56px;
-    font-size: 16px;
+  .root {
+    padding-left: var(--space-5);
   }
 
-  .submit {
-    width: 40px;
-    height: 40px;
-  }
-
+  .input,
   .textarea {
     font-size: 16px;
   }
-}
 
-/* Telas maiores: um pouco mais largo que os cards (que têm 560px) */
-@media (min-width: 641px) {
-  .composer {
-    width: min(620px, calc(100% - 32px));
+  .details {
+    left: 0;
+    right: 0;
   }
 }
