@@ -63,7 +63,7 @@
   padding: 0;
   border: 0;
   background: var(--color-surface-2);
-  color: var(--blue-400);
+  color: var(--brand-400);
   font-size: var(--text-md);
   touch-action: none;
   cursor: grab;

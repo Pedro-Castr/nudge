@@ -18,7 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="pt-BR"
+      data-color="blue"
+      className={`${display.variable} ${body.variable}`}
+    >
       <body>{children}</body>
     </html>
   );

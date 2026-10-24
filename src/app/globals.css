@@ -1,24 +1,61 @@
-/* =========================================================
-   Nudge — globals.css
-   1) Primitivos (valores brutos)   2) Semânticos (tema)
-   3) Escalas (tipo, raio, sombra…) 4) Reset e base
-   Componentes devem usar só tokens semânticos e escalas.
-   ========================================================= */
+/* ---------- 1. Cor da marca (um bloco por tema de cor) ----------
+   Para criar um tema novo: copie o bloco, mude data-color e os valores.
+   Blocos novos vêm DEPOIS do azul (mesma especificidade, o último vence). */
+:root,
+[data-color="blue"] {
+  --brand-50: #f3f7ff;
+  --brand-100: #e6eeff;
+  --brand-150: #dce7fd; /* fundo da página */
+  --brand-200: #cfddfe;
+  --brand-300: #a9c1fc;
+  --brand-400: #7b9cf8;
+  --brand-500: #4d78f2;
+  --brand-600: #2f5be6; /* primária */
+  --brand-700: #2346bd;
+  --brand-800: #1b3590;
+  --brand-900: #142763;
+  --brand-950: #0c1a42; /* tinta */
 
-/* ---------- 1. Primitivos ---------- */
+  /* Cinzas tingidos, bordas e bases de sombra do tema */
+  --brand-ink-muted: #4a5b80;
+  --brand-ink-subtle: #54648a;
+  --brand-border: #d3e0fb;
+  --brand-border-strong: #a9bdea;
+  --brand-border-control: #7a90c2;
+  --brand-rgb: 47 91 230;
+  --brand-shadow-rgb: 20 39 99;
+  --brand-overlay-rgb: 12 26 66;
+
+  /* Ondas: a cor do traço precisa estar na própria imagem */
+  --wave-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10T90 10T120 10' fill='none' stroke='%232F5BE6' stroke-opacity='.14' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+[data-color="red"] {
+  --brand-50: #fff5f5;
+  --brand-100: #ffe8e8;
+  --brand-150: #fde2e2;
+  --brand-200: #fbcfcf;
+  --brand-300: #f7a8a8;
+  --brand-400: #f27575;
+  --brand-500: #e84848;
+  --brand-600: #d32f2f;
+  --brand-700: #b02020;
+  --brand-800: #8a1a1a;
+  --brand-900: #661414;
+  --brand-950: #3f0c0c;
+  --brand-ink-muted: #6b4545;
+  --brand-ink-subtle: #7a5555;
+  --brand-border: #f6d3d3;
+  --brand-border-strong: #e4a9a9;
+  --brand-border-control: #b98080;
+  --brand-rgb: 211 47 47;
+  --brand-shadow-rgb: 63 12 12;
+  --brand-overlay-rgb: 40 8 8;
+  --wave-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10T90 10T120 10' fill='none' stroke='%23D32F2F' stroke-opacity='.14' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+/* Cores independentes do tema */
 :root {
-  --blue-50: #f3f7ff;
-  --blue-100: #e6eeff;
-  --blue-200: #cfddfe;
-  --blue-300: #a9c1fc;
-  --blue-400: #7b9cf8;
-  --blue-500: #4d78f2;
-  --blue-600: #2f5be6;
-  --blue-700: #2346bd;
-  --blue-800: #1b3590;
-  --blue-900: #142763;
-  --blue-950: #0c1a42;
-
   --sun-100: #fdebd3;
   --sun-500: #f5a340;
   --sun-700: #8a4b05;
@@ -33,42 +70,41 @@
   --white: #ffffff;
 }
 
-/* ---------- 2. Semânticos: tema claro ----------
-   Tema escuro futuro: duplicar este bloco em
-   [data-theme="dark"] { ... } redefinindo apenas estas variáveis. */
+/* ---------- 2. Semânticos: modo claro ----------
+   Modo escuro futuro: [data-theme="dark"] { ... } redefinindo só estas. */
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
   /* Fundos e superfícies em camadas */
-  --color-bg: var(--blue-50);
+  --color-bg: var(--brand-150); /* página colorida */
   --color-surface: var(--white); /* cartões, pop-ups */
-  --color-surface-2: var(--blue-50); /* campos, áreas rebaixadas */
-  --color-surface-3: var(--blue-100); /* alças, chips, hover */
-  --color-surface-inverse: var(--blue-950);
-  --color-overlay: rgb(12 26 66 / 0.4);
+  --color-surface-2: var(--brand-50); /* campos, alças */
+  --color-surface-3: var(--brand-100); /* chips, botões neutros */
+  --color-surface-inverse: var(--brand-950);
+  --color-overlay: rgb(var(--brand-overlay-rgb) / 0.4);
 
   /* Texto */
-  --color-text: var(--blue-950);
-  --color-text-muted: #4a5b80;
-  --color-text-subtle: #5f6f95;
+  --color-text: var(--brand-950);
+  --color-text-muted: var(--brand-ink-muted);
+  --color-text-subtle: var(--brand-ink-subtle);
   --color-text-inverse: var(--white);
-  --color-text-link: var(--blue-700);
+  --color-text-link: var(--brand-700);
 
   /* Bordas */
-  --color-border: #dce6fb;
-  --color-border-strong: #b9cbf2;
-  --color-border-control: #7a90c2; /* contorno de campos (3:1) */
+  --color-border: var(--brand-border);
+  --color-border-strong: var(--brand-border-strong);
+  --color-border-control: var(--brand-border-control);
 
   /* Primária */
-  --color-primary: var(--blue-600);
-  --color-primary-hover: var(--blue-700);
-  --color-primary-active: var(--blue-800);
-  --color-primary-soft: var(--blue-100);
-  --color-primary-soft-hover: var(--blue-200);
+  --color-primary: var(--brand-600);
+  --color-primary-hover: var(--brand-700);
+  --color-primary-active: var(--brand-800);
+  --color-primary-soft: var(--brand-100);
+  --color-primary-soft-hover: var(--brand-200);
   --color-on-primary: var(--white);
-  --color-on-primary-soft: var(--blue-700);
-  --primary-rgb: 47 91 230;
+  --color-on-primary-soft: var(--brand-700);
+  --primary-rgb: var(--brand-rgb);
 
   /* Acento discreto */
   --color-accent: var(--sun-500);
@@ -83,12 +119,9 @@
   --color-success: var(--green-600);
   --color-success-soft: var(--green-50);
 
-  /* Foco e sombras (cor-base separada para o tema escuro) */
-  --color-focus: var(--blue-600);
-  --shadow-rgb: 20 39 99;
-
-  /* Motivo de ondas (stroke muda por tema) */
-  --wave-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10T90 10T120 10' fill='none' stroke='%232F5BE6' stroke-opacity='.1' stroke-width='1.5'/%3E%3C/svg%3E");
+  /* Foco e sombras */
+  --color-focus: var(--brand-600);
+  --shadow-rgb: var(--brand-shadow-rgb);
 }
 
 /* ---------- 3. Escalas ---------- */
@@ -259,8 +292,8 @@ svg {
 }
 
 ::selection {
-  background: var(--blue-200);
-  color: var(--blue-950);
+  background: var(--brand-200);
+  color: var(--brand-950);
 }
 
 :focus-visible {
