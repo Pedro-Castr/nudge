@@ -9,7 +9,6 @@ import taskService from "@/features/task/services/taskService";
 import { getChanges } from "@/features/task/utils/getChanges";
 import type { Task } from "@/features/task/types/task";
 
-import itemStyles from "./taskItem.module.css";
 import styles from "./taskPopup.module.css";
 
 interface TaskPopupProps {
@@ -78,7 +77,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
     <>
       <button
         type="button"
-        className={itemStyles.open}
+        className={styles.open}
         popoverTarget={popupId}
         aria-label={`Ver detalhes: ${task.nome}`}
         onClick={() => {
@@ -88,14 +87,28 @@ export default function TaskPopup({ task }: TaskPopupProps) {
       />
 
       <div id={popupId} popover="auto" className={styles.popup}>
-        {editing ? (
-          <form className={styles.editForm} onSubmit={handleSave}>
-            <h3 className={styles.popupTitle}>Editar tarefa</h3>
+        <header className={styles.header}>
+          <h3 className={styles.title}>
+            {editing ? "Editar tarefa" : task.nome}
+          </h3>
 
-            <label className={styles.editField}>
-              Nome
+          <button
+            type="button"
+            className={styles.close}
+            popoverTarget={popupId}
+            popoverTargetAction="hide"
+            aria-label="Fechar"
+          >
+            <FaXmark aria-hidden="true" />
+          </button>
+        </header>
+
+        {editing ? (
+          <form className={styles.form} onSubmit={handleSave}>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Nome</span>
               <input
-                className={styles.editInput}
+                className={styles.input}
                 type="text"
                 name="nome"
                 maxLength={100}
@@ -110,10 +123,10 @@ export default function TaskPopup({ task }: TaskPopupProps) {
               />
             </label>
 
-            <label className={styles.editField}>
-              Detalhes (opcional)
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Detalhes (opcional)</span>
               <textarea
-                className={styles.editTextarea}
+                className={styles.textarea}
                 name="descricao"
                 maxLength={256}
                 rows={3}
@@ -126,15 +139,15 @@ export default function TaskPopup({ task }: TaskPopupProps) {
             </label>
 
             {error && (
-              <p role="alert" className={styles.popupError}>
+              <p role="alert" className={styles.error}>
                 {error}
               </p>
             )}
 
-            <div className={styles.popupFooter}>
+            <div className={styles.footer}>
               <button
                 type="button"
-                className={styles.popupButton}
+                className={styles.button}
                 onClick={() => setEditing(false)}
               >
                 Cancelar
@@ -142,60 +155,48 @@ export default function TaskPopup({ task }: TaskPopupProps) {
 
               <button
                 type="submit"
-                className={`${styles.popupButton} ${styles.popupPrimary}`}
+                className={`${styles.button} ${styles.primary}`}
                 disabled={saving}
               >
-                Salvar
+                {saving ? "Salvando…" : "Salvar"}
               </button>
             </div>
           </form>
         ) : (
           <>
-            <h3 className={styles.popupTitle}>{task.nome}</h3>
-
             {task.descricao ? (
-              <p className={styles.popupText}>{task.descricao}</p>
+              <p className={styles.text}>{task.descricao}</p>
             ) : (
-              <p className={styles.popupEmpty}>Sem descrição.</p>
+              <p className={styles.empty}>Sem descrição.</p>
             )}
 
             {error && (
-              <p role="alert" className={styles.popupError}>
+              <p role="alert" className={styles.error}>
                 {error}
               </p>
             )}
 
-            <div className={styles.popupFooter}>
+            <div className={styles.footer}>
               <button
                 type="button"
-                className={styles.popupButton}
+                className={styles.button}
                 onClick={startEdit}
               >
-                <FaPencil />
+                <FaPencil aria-hidden="true" />
                 Editar
               </button>
 
               <button
                 type="button"
-                className={`${styles.popupButton} ${styles.popupDanger}`}
+                className={`${styles.button} ${styles.danger}`}
                 onClick={handleDelete}
               >
-                <FaTrashCan />
+                <FaTrashCan aria-hidden="true" />
                 Excluir
               </button>
             </div>
           </>
         )}
-
-        <button
-          type="button"
-          className={styles.popupClose}
-          popoverTarget={popupId}
-          popoverTargetAction="hide"
-          aria-label="Fechar"
-        >
-          <FaXmark />
-        </button>
       </div>
     </>
   );

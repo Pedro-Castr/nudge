@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { FaArrowRight, FaCheck, FaGripVertical } from "react-icons/fa6";
+import { FaArrowRight } from "react-icons/fa6";
+
 import Logo from "@/components/logo";
+import PreviewCard from "./components/previewCard";
+
 import styles from "./homePage.module.css";
 
 const steps = [
@@ -8,20 +11,6 @@ const steps = [
   { titulo: "Arraste", resto: "para pôr em ordem." },
   { titulo: "Conclua", resto: "e respire." },
 ];
-
-function PreviewCard({ nome, dragging }: { nome: string; dragging?: boolean }) {
-  return (
-    <li className={`${styles.card} ${dragging ? styles.dragging : ""}`}>
-      <span className={styles.handle}>
-        <FaGripVertical />
-      </span>
-      <span className={styles.name}>{nome}</span>
-      <span className={styles.check}>
-        <FaCheck />
-      </span>
-    </li>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -36,7 +25,7 @@ export default function HomePage() {
       <main>
         <section className={styles.hero}>
           <h1 className={styles.title}>
-            Um <em>empurrãozinho</em> para você nunca esquecer.
+            Um <em>empurrão</em> que te ajuda a lembrar.
           </h1>
           <p className={styles.lead}>
             Uma lista de tarefas calma e sem ruído: anote, organize do seu jeito
@@ -49,10 +38,10 @@ export default function HomePage() {
 
           <div className={styles.preview} aria-hidden="true">
             <ul className={styles.previewList}>
-              <PreviewCard nome="Marcar o dentista" />
-              <PreviewCard nome="Ligar para a vovó antes das 18h" dragging />
+              <PreviewCard />
+              <PreviewCard dragging />
               <li className={styles.slot} />
-              <PreviewCard nome="Comprar café" />
+              <PreviewCard />
             </ul>
           </div>
         </section>

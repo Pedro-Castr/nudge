@@ -1,137 +1,150 @@
-.list {
+.root {
+  width: 100%;
+  max-width: var(--content-max);
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  /* Nunca encosta nas bordas: sobra 16px de cada lado em telas estreitas */
-  width: min(560px, calc(100% - 32px));
-  margin-inline: auto;
+  gap: var(--space-6);
 }
 
-.section {
+/* ---------- Pendentes ---------- */
+.pending {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .items {
+  list-style: none;
   margin: 0;
   padding: 0;
-  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
+  transition: opacity var(--dur) var(--ease-out);
 }
 
-.empty {
-  width: min(560px, calc(100% - 32px));
-  margin-inline: auto;
-  padding: 32px 16px;
-  text-align: center;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--ink);
+/* Enquanto a nova ordem é salva */
+.items[aria-busy="true"] {
+  opacity: 0.7;
 }
-
-/* ---------- Título de seção: pequeno e discreto ---------- */
-
-.label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.label::before,
-.label::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.labelText {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ---------- Contador: canto inferior direito da seção ---------- */
 
 .count {
-  margin: 0;
-  text-align: right;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  align-self: flex-end;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-subtle);
 }
 
-/* ---------- Concluídas (recolhível) ---------- */
+/* ---------- Estado vazio ---------- */
+.empty {
+  width: 100%;
+  max-width: var(--content-max);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-12) var(--space-6);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}
 
+.emptyMark {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-3);
+}
+
+.emptyText {
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Erro ao reordenar ---------- */
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-soft);
+  color: var(--color-danger-hover);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  animation: rise var(--dur) var(--ease-out);
+}
+
+.error svg {
+  flex: none;
+}
+
+/* ---------- Concluídas ---------- */
 .done {
   display: flex;
   flex-direction: column;
 }
 
 .summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
   border-radius: var(--radius-sm);
-  cursor: pointer;
   list-style: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--dur) var(--ease-out);
 }
 
 .summary::-webkit-details-marker {
   display: none;
 }
 
-.summary:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
+.summary:hover {
+  color: var(--color-text);
 }
 
-/* O espaço até a lista só existe com a seção aberta */
-.done[open] .summary {
-  margin-bottom: 12px;
+.summaryLabel {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
 }
 
-.chevron::before {
-  content: "▸";
-  display: inline-block;
-  font-size: 12px;
-  transition: transform 0.15s ease;
+.badge {
+  min-width: 1.5rem;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-3);
+  color: var(--color-on-primary-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1.5rem;
+  text-align: center;
 }
 
-.done[open] .chevron::before {
-  transform: rotate(90deg);
+.chevron {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  transition: transform var(--dur) var(--ease-out);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .chevron::before {
-    transition: none;
-  }
+.done[open] .chevron {
+  transform: rotate(180deg);
 }
 
-/* ---------- Celular: espaços menores ---------- */
-/* Fica por último para vencer as regras acima, que têm a mesma especificidade */
+.doneBody {
+  margin-top: var(--space-3);
+  animation: rise var(--dur-slow) var(--ease-out);
+}
 
-@media (max-width: 640px) {
-  .list {
-    gap: 20px;
-  }
-
-  .section {
-    gap: 8px;
-  }
-
-  .items {
-    gap: 8px;
-  }
-
-  .done[open] .summary {
-    margin-bottom: 8px;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
 }

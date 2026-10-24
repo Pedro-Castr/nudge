@@ -2,8 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { FaCheck, FaArrowRotateLeft } from "react-icons/fa6";
-import { LuGrip } from "react-icons/lu";
+import {
+  FaArrowRotateLeft,
+  FaCheck,
+  FaCircleExclamation,
+  FaGripVertical,
+} from "react-icons/fa6";
 
 import { getErrorText } from "@/lib/api";
 import taskService from "@/features/task/services/taskService";
@@ -24,7 +28,7 @@ export default function TaskItem({
 }: TaskItemProps) {
   const router = useRouter();
 
-  const [Error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isRefreshing, startTransition] = useTransition();
   const [completing, setCompleting] = useState(false);
 
@@ -49,41 +53,50 @@ export default function TaskItem({
   return (
     <li
       ref={sortableRef}
-      className={`${styles.item} ${task.concluida ? styles.itemDone : ""}`}
+      className={styles.item}
+      data-done={task.concluida ? "" : undefined}
     >
       <TaskPopup task={task} />
 
       {!task.concluida && (
         <button
           type="button"
-          className={styles.handleArea}
+          className={styles.handle}
           aria-label="Reordenar tarefa"
           title="Arraste para reordenar"
           ref={handleRef}
         >
-          <LuGrip />
+          <FaGripVertical aria-hidden="true" />
         </button>
       )}
 
-      <div className={styles.text}>
-        <span className={styles.nome}>{task.nome}</span>
-        {Error && (
-          <span role="alert" className={styles.cardError}>
-            {Error}
-          </span>
+      <div className={styles.content}>
+        <div className={styles.main}>
+          <span className={styles.nome}>{task.nome}</span>
+
+          <button
+            type="button"
+            className={styles.complete}
+            aria-label={completeLabel}
+            title={completeLabel}
+            onClick={handleToggle}
+            disabled={completing || isRefreshing}
+          >
+            {task.concluida ? (
+              <FaArrowRotateLeft aria-hidden="true" />
+            ) : (
+              <FaCheck aria-hidden="true" />
+            )}
+          </button>
+        </div>
+
+        {error && (
+          <p role="alert" className={styles.error}>
+            <FaCircleExclamation aria-hidden="true" />
+            {error}
+          </p>
         )}
       </div>
-
-      <button
-        type="button"
-        className={styles.complete}
-        aria-label={completeLabel}
-        title={completeLabel}
-        onClick={handleToggle}
-        disabled={completing || isRefreshing}
-      >
-        {(!task.concluida && <FaCheck />) || <FaArrowRotateLeft />}
-      </button>
     </li>
   );
 }

@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
+import { FaChevronDown, FaCircleExclamation } from "react-icons/fa6";
 
+import Logo from "@/components/logo";
 import { getErrorText } from "@/lib/api";
 import taskService from "../services/taskService";
 import type { Task } from "@/features/task/types/task";
@@ -90,53 +92,54 @@ export default function TaskList({ tasks }: TaskListProps) {
       }}
     >
       {tasks.length === 0 ? (
-        <p className={styles.empty}>
-          Nada por aqui. Anote sua primeira tarefa.
-        </p>
+        <div className={styles.empty}>
+          <span className={styles.emptyMark} aria-hidden="true">
+            <Logo size={32} showWordmark={false} />
+          </span>
+          <p className={styles.emptyText}>
+            Nada por aqui. Anote sua primeira tarefa.
+          </p>
+        </div>
       ) : (
-        <div className={styles.list}>
+        <div className={styles.root}>
           {error && (
             <p role="alert" className={styles.error}>
+              <FaCircleExclamation aria-hidden="true" />
               {error}
             </p>
           )}
 
-          <div className={styles.section}>
-            {pending.length > 0 && (
-              <>
-                <ol className={styles.items}>
-                  {pending.map((task, index) => (
-                    <SortableTask
-                      key={task.id}
-                      task={task}
-                      index={index}
-                      disabled={saving}
-                    />
-                  ))}
-                </ol>
+          {pending.length > 0 && (
+            <section className={styles.pending} aria-label="Pendentes">
+              <ol className={styles.items} aria-busy={saving}>
+                {pending.map((task, index) => (
+                  <SortableTask
+                    key={task.id}
+                    task={task}
+                    index={index}
+                    disabled={saving}
+                  />
+                ))}
+              </ol>
 
-                <p className={styles.count}>{pendingCount}</p>
-              </>
-            )}
-          </div>
+              <p className={styles.count}>{pendingCount}</p>
+            </section>
+          )}
 
           {done.length > 0 && (
-            <div className={styles.section}>
-              <details className={styles.done}>
-                <summary className={`${styles.label} ${styles.summary}`}>
-                  <span className={styles.labelText}>
-                    Concluídas
-                    <span className={styles.chevron} aria-hidden="true" />
-                  </span>
-                </summary>
+            <details className={styles.done}>
+              <summary className={styles.summary}>
+                <span className={styles.summaryLabel}>Concluídas</span>
+                <span className={styles.badge}>{done.length}</span>
+                <FaChevronDown className={styles.chevron} aria-hidden="true" />
+              </summary>
 
-                <ul className={styles.items}>
-                  {done.map((task) => (
-                    <TaskItem key={task.id} task={task} />
-                  ))}
-                </ul>
-              </details>
-            </div>
+              <ul className={`${styles.items} ${styles.doneBody}`}>
+                {done.map((task) => (
+                  <TaskItem key={task.id} task={task} />
+                ))}
+              </ul>
+            </details>
           )}
         </div>
       )}

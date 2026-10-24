@@ -11,34 +11,18 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+import type { Mode, AuthValues } from "../types/auth";
+
 import styles from "./authForm.module.css";
 
-type Mode = "login" | "signup";
-type Values = { nome: string; email: string; senha: string };
-
 type AuthFormProps = {
-  onSubmit?: (mode: Mode, values: Values) => void | Promise<void>;
+  onSubmit?: (mode: Mode, values: AuthValues) => void | Promise<void>;
 };
 
 const TABS: { mode: Mode; label: string }[] = [
   { mode: "login", label: "Entrar" },
   { mode: "signup", label: "Criar conta" },
 ];
-
-function Field({
-  id,
-  label,
-  ...rest
-}: { id: string; label: string } & InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className={styles.field}>
-      <label htmlFor={id} className={styles.label}>
-        {label}
-      </label>
-      <input id={id} className={styles.input} {...rest} />
-    </div>
-  );
-}
 
 function PasswordField({
   id,
@@ -153,7 +137,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     e.preventDefault();
     if (submitting) return;
     const data = new FormData(e.currentTarget);
-    const values: Values = {
+    const values: AuthValues = {
       nome: String(data.get("nome") ?? ""),
       email: String(data.get("email") ?? ""),
       senha: String(data.get("senha") ?? ""),
@@ -212,14 +196,18 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               onSubmit={(e) => handleSubmit(e, "login")}
             >
               <h2 className={styles.title}>Que bom te ver de novo</h2>
-              <Field
-                id={`${uid}-login-email`}
-                label="E-mail"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-              />
+              <div className={styles.field}>
+                <label htmlFor={`${uid}-login-email`} className={styles.label}>
+                  E-mail
+                </label>
+                <input
+                  id={`${uid}-login-email`}
+                  className={styles.input}
+                  name="email"
+                  type="email"
+                />
+              </div>
+
               <PasswordField
                 id={`${uid}-login-senha`}
                 autoComplete="current-password"
@@ -251,22 +239,30 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               onSubmit={(e) => handleSubmit(e, "signup")}
             >
               <h2 className={styles.title}>Crie sua conta</h2>
-              <Field
-                id={`${uid}-signup-nome`}
-                label="Nome"
-                name="nome"
-                type="text"
-                autoComplete="name"
-                required
-              />
-              <Field
-                id={`${uid}-signup-email`}
-                label="E-mail"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-              />
+              <div className={styles.field}>
+                <label htmlFor={`${uid}-signup-nome`} className={styles.label}>
+                  Nome
+                </label>
+                <input
+                  id={`${uid}-signup-nome`}
+                  className={styles.input}
+                  name="nome"
+                  type="text"
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label htmlFor={`${uid}-signup-email`} className={styles.label}>
+                  E-mail
+                </label>
+                <input
+                  id={`${uid}-signup-email`}
+                  className={styles.input}
+                  name="email"
+                  type="email"
+                />
+              </div>
+
               <PasswordField
                 id={`${uid}-signup-senha`}
                 autoComplete="new-password"
