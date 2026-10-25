@@ -76,9 +76,62 @@
   /* Foco e sombras */
   --color-focus: var(--brand-950);
   --shadow-rgb: var(--brand-shadow-rgb);
+}
 
-  /* Ondas (traço branco sobre o fundo) */
-  --wave-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10T90 10T120 10' fill='none' stroke='%23ffffff' stroke-opacity='.22' stroke-width='1.5'/%3E%3C/svg%3E");
+/* ---------- Fundo granulado ---------- */
+:root {
+  --grain-opacity: 0.6; /* força do granulado */
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncG type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncB type='linear' slope='1.7' intercept='-.35'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Manchas de cor da paleta, em movimento quase imperceptível */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      45% 50% at 18% 22%,
+      color-mix(in srgb, var(--brand-600) 55%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 45% at 82% 18%,
+      color-mix(in srgb, var(--brand-300) 70%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 55% at 85% 88%,
+      color-mix(in srgb, var(--brand-600) 60%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(40% 45% at 12% 85%, rgb(255 255 255 / 0.3), transparent 70%);
+  animation: fundo-drift 90s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Granulado por cima das manchas, atrás do conteúdo */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--grain-image);
+  background-size: 220px 220px;
+  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+}
+
+@keyframes fundo-drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  to {
+    transform: translate3d(2%, -3%, 0) rotate(4deg) scale(1.08);
+  }
 }
 
 /* ---------- 3. Escalas ---------- */
