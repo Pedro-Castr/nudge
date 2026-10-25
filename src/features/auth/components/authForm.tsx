@@ -11,12 +11,16 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import type { Mode, AuthValues } from "../types/auth";
 
+import { getErrorText } from "@/lib/api";
 import styles from "./authForm.module.css";
 
+type Mode = "login" | "signup";
+type Values = { nome: string; email: string; senha: string };
+type FieldErrors = Partial<Record<keyof Values, string>>;
+
 type AuthFormProps = {
-  onSubmit?: (mode: Mode, values: AuthValues) => void | Promise<void>;
+  onSubmit?: (mode: Mode, values: Values) => void | Promise<void>;
 };
 
 const TABS: { mode: Mode; label: string }[] = [
@@ -24,23 +28,61 @@ const TABS: { mode: Mode; label: string }[] = [
   { mode: "signup", label: "Criar conta" },
 ];
 
+function Field({
+  id,
+  label,
+  error,
+  ...rest
+}: {
+  id: string;
+  label: string;
+  error?: string;
+} & InputHTMLAttributes<HTMLInputElement>) {
+  const errorId = `${id}-error`;
+
+  return (
+    <div className={styles.field}>
+      <label htmlFor={id} className={styles.label}>
+        {label}
+      </label>
+      <input
+        id={id}
+        className={styles.input}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        {...rest}
+      />
+      {error && (
+        <p id={errorId} role="alert" className={styles.fieldError}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function PasswordField({
   id,
   name = "senha",
   autoComplete,
   minLength,
   hint,
+  error,
   aside,
+  onChange,
 }: {
   id: string;
   name?: string;
   autoComplete: string;
   minLength?: number;
   hint?: string;
+  error?: string;
   aside?: ReactNode;
+  onChange?: () => void;
 }) {
   const [visible, setVisible] = useState(false);
   const hintId = `${id}-hint`;
+  const errorId = `${id}-error`;
 
   return (
     <div className={styles.field}>
@@ -58,7 +100,9 @@ function PasswordField({
           className={`${styles.input} ${styles.passwordInput}`}
           autoComplete={autoComplete}
           minLength={minLength}
-          aria-describedby={hint ? hintId : undefined}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : hint ? hintId : undefined}
+          onChange={onChange}
           required
         />
         <button
@@ -71,10 +115,16 @@ function PasswordField({
           {visible ? "Ocultar" : "Mostrar"}
         </button>
       </div>
-      {hint && (
-        <p id={hintId} className={styles.hint}>
-          {hint}
+      {error ? (
+        <p id={errorId} role="alert" className={styles.fieldError}>
+          {error}
         </p>
+      ) : (
+        hint && (
+          <p id={hintId} className={styles.hint}>
+            {hint}
+          </p>
+        )
       )}
     </div>
   );
@@ -106,10 +156,12 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   const uid = useId();
   const [mode, setMode] = useState<Mode>("login");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<FieldErrors>({});
   const [height, setHeight] = useState<number>();
   const loginRef = useRef<HTMLDivElement>(null);
   const signupRef = useRef<HTMLDivElement>(null);
 
+  // Altura animada: mede o painel ativo
   useEffect(() => {
     const el = mode === "login" ? loginRef.current : signupRef.current;
     if (!el) return;
@@ -123,13 +175,22 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   const tabId = (m: Mode) => `${uid}-tab-${m}`;
   const panelId = (m: Mode) => `${uid}-panel-${m}`;
 
+  // limpa o erro de um campo quando a pessoa volta a digitar
+  const clear = (field: keyof Values) =>
+    setError((e) => ({ ...e, [field]: undefined }));
+
+  function changeMode(next: Mode) {
+    setMode(next);
+    setError({});
+  }
+
   function handleTabKey(e: KeyboardEvent<HTMLDivElement>) {
     let next: Mode | null = null;
     if (e.key === "ArrowRight" || e.key === "End") next = "signup";
     if (e.key === "ArrowLeft" || e.key === "Home") next = "login";
     if (!next) return;
     e.preventDefault();
-    setMode(next);
+    changeMode(next);
     document.getElementById(tabId(next))?.focus();
   }
 
@@ -137,14 +198,21 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     e.preventDefault();
     if (submitting) return;
     const data = new FormData(e.currentTarget);
-    const values: AuthValues = {
+    const values: Values = {
       nome: String(data.get("nome") ?? ""),
       email: String(data.get("email") ?? ""),
       senha: String(data.get("senha") ?? ""),
     };
     setSubmitting(true);
+    setError({});
     try {
       if (onSubmit) await onSubmit(formMode, values);
+      else await new Promise((r) => setTimeout(r, 1200)); // só para ver o estado; remova
+    } catch (err) {
+      // getErrorText devolve um texto só; escolhi onde mostrá-lo:
+      // login: sob a senha; cadastro: sob o e-mail (ex.: "e-mail já cadastrado")
+      const field = formMode === "login" ? "senha" : "email";
+      setError({ [field]: getErrorText(err) });
     } finally {
       setSubmitting(false);
     }
@@ -170,7 +238,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
             aria-controls={panelId(t.mode)}
             tabIndex={mode === t.mode ? 0 : -1}
             disabled={submitting}
-            onClick={() => setMode(t.mode)}
+            onClick={() => changeMode(t.mode)}
           >
             {t.label}
           </button>
@@ -196,21 +264,21 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               onSubmit={(e) => handleSubmit(e, "login")}
             >
               <h2 className={styles.title}>Que bom te ver de novo</h2>
-              <div className={styles.field}>
-                <label htmlFor={`${uid}-login-email`} className={styles.label}>
-                  E-mail
-                </label>
-                <input
-                  id={`${uid}-login-email`}
-                  className={styles.input}
-                  name="email"
-                  type="email"
-                />
-              </div>
-
+              <Field
+                id={`${uid}-login-email`}
+                label="E-mail"
+                name="email"
+                type="email"
+                autoComplete="email"
+                error={error.email}
+                onChange={() => clear("email")}
+                required
+              />
               <PasswordField
                 id={`${uid}-login-senha`}
                 autoComplete="current-password"
+                error={error.senha}
+                onChange={() => clear("senha")}
                 aside={
                   <Link href="/esqueci-senha" className={styles.forgot}>
                     Esqueci minha senha
@@ -239,35 +307,33 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               onSubmit={(e) => handleSubmit(e, "signup")}
             >
               <h2 className={styles.title}>Crie sua conta</h2>
-              <div className={styles.field}>
-                <label htmlFor={`${uid}-signup-nome`} className={styles.label}>
-                  Nome
-                </label>
-                <input
-                  id={`${uid}-signup-nome`}
-                  className={styles.input}
-                  name="nome"
-                  type="text"
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label htmlFor={`${uid}-signup-email`} className={styles.label}>
-                  E-mail
-                </label>
-                <input
-                  id={`${uid}-signup-email`}
-                  className={styles.input}
-                  name="email"
-                  type="email"
-                />
-              </div>
-
+              <Field
+                id={`${uid}-signup-nome`}
+                label="Nome"
+                name="nome"
+                type="text"
+                autoComplete="name"
+                error={error.nome}
+                onChange={() => clear("nome")}
+                required
+              />
+              <Field
+                id={`${uid}-signup-email`}
+                label="E-mail"
+                name="email"
+                type="email"
+                autoComplete="email"
+                error={error.email}
+                onChange={() => clear("email")}
+                required
+              />
               <PasswordField
                 id={`${uid}-signup-senha`}
                 autoComplete="new-password"
                 minLength={8}
                 hint="Use pelo menos 8 caracteres"
+                error={error.senha}
+                onChange={() => clear("senha")}
               />
               <SubmitButton
                 submitting={submitting && mode === "signup"}
