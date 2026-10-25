@@ -251,6 +251,23 @@
   color: var(--color-text-link);
 }
 
+.fieldError {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--color-danger);
+  animation: rise var(--dur) var(--ease-out);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.input[aria-invalid="true"]:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgb(217 45 63 / 0.22);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

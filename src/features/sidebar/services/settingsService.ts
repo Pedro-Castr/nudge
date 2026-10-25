@@ -12,17 +12,15 @@ const updateUser = (id: string, changes: UpdateProfileValues) => {
   });
 };
 
-const deleteUser = (userId: string) => {
+const deleteUser = (userId: string) =>
   apiFetch(`${API_URL}/users/${userId}`, {
     method: "DELETE",
   });
-};
 
-const logOutUser = () => {
+const logOutUser = () =>
   apiFetch(`${API_URL}/session`, {
     method: "DELETE",
   });
-};
 
 const SettingsService = {
   updateUser,

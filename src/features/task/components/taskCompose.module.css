@@ -18,8 +18,8 @@
 
 .root:focus-within {
   box-shadow:
-    0 0 0 2px var(--color-primary),
-    0 0 0 6px rgb(var(--primary-rgb) / 0.18),
+    0 0 0 3px var(--white),
+    0 0 0 6px var(--brand-900),
     var(--shadow-md);
 }
 
@@ -27,9 +27,13 @@
   flex: 1;
   min-width: 0;
   height: 2.75rem;
-  border: 0;
+  border: none;
   background: transparent;
   font-size: var(--text-md);
+  outline: none;
+}
+
+.input:focus-visible {
   outline: none;
 }
 

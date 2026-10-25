@@ -45,7 +45,9 @@ export default function PreviewCard({ dragging }: { dragging?: boolean }) {
       <span className={styles.handle}>
         <FaGripVertical />
       </span>
-      <span className={styles.name}>{nome}</span>
+      <span className={styles.name} suppressHydrationWarning>
+        {nome}
+      </span>
       <span className={styles.check}>
         <FaCheck />
       </span>
