@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  color: var(--color-text);
+  color: var(--color-on-bg);
   line-height: 1;
 }
 
@@ -12,14 +12,14 @@
 }
 
 .small {
-  fill: var(--brand-400);
-  fill-opacity: 0.5;
+  fill: var(--white);
+  fill-opacity: 0.6;
   transform-box: fill-box;
   transition: transform var(--dur-slow) var(--ease-spring);
 }
 
 .large {
-  fill: var(--color-primary);
+  fill: var(--color-on-bg);
 }
 
 /* O "empurrãozinho": o círculo pequeno encosta no grande */

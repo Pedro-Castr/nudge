@@ -7,9 +7,9 @@ import PreviewCard from "./components/previewCard";
 import styles from "./homePage.module.css";
 
 const steps = [
-  { titulo: "Anote", resto: "em segundos." },
+  { titulo: "Anote", resto: "em poucos segundos." },
   { titulo: "Arraste", resto: "para pôr em ordem." },
-  { titulo: "Conclua", resto: "e respire." },
+  { titulo: "Lembre", resto: "na hora certa." },
 ];
 
 export default function HomePage() {

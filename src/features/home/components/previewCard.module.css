@@ -44,7 +44,7 @@
   z-index: 1;
   box-shadow:
     var(--shadow-lg),
-    0 0 0 2px var(--color-primary);
+    0 0 0 2px var(--brand-900);
   transform: translate(10px, -2px) rotate(2deg) scale(1.03);
   animation: float 3.2s ease-in-out infinite;
 }

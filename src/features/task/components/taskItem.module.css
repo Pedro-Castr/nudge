@@ -25,7 +25,7 @@
   transform: none;
   box-shadow:
     var(--shadow-lg),
-    0 0 0 2px var(--color-primary);
+    0 0 0 2px var(--brand-900);
 }
 
 .item[data-dnd-dragging] .handle {
@@ -36,8 +36,8 @@
 
 /* Concluído: cartão chapado, sem alça, nome riscado e esmaecido */
 .item[data-done] {
-  background: rgb(255 255 255 / 0.55);
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  background: rgb(255 255 255 / 0.8);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
 }
 
 .item[data-done]:hover {
