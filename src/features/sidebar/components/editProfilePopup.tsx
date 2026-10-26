@@ -23,8 +23,6 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const titleId = `${id}-title`;
-
   async function handleSave(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -33,7 +31,7 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
     const changes = getChanges(user, {
       nome: String(data.get("nome")).trim(),
       email: String(data.get("email")).trim(),
-      senha: String(data.get("senha")).trim() || user.senha, // em branco: mantém a atual
+      senha: String(data.get("senha")).trim() || user.senha,
     });
 
     if (Object.keys(changes).length === 0) return;
@@ -58,10 +56,10 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
       ref={popupRef}
       popover="auto"
       role="dialog"
-      aria-labelledby={titleId}
+      aria-labelledby={`${id}-title`}
       className={styles.popup}
     >
-      <h3 id={titleId} className={styles.title}>
+      <h3 id={`${id}-title`} className={styles.title}>
         Editar perfil
       </h3>
 
@@ -78,7 +76,6 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             name="nome"
             autoComplete="name"
             defaultValue={user.nome}
-            required
           />
         </label>
 
@@ -90,7 +87,6 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             name="email"
             autoComplete="email"
             defaultValue={user.email}
-            required
           />
         </label>
 
@@ -101,10 +97,9 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             type="password"
             name="senha"
             autoComplete="new-password"
-            minLength={8}
           />
           <span className={styles.hint}>
-            Deixe em branco para manter a atual. Mínimo de 8 caracteres.
+            Deixe em branco para manter a atual.
           </span>
         </label>
 

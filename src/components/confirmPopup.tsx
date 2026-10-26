@@ -31,8 +31,6 @@ export default function ConfirmPopup({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const titleId = `${id}-title`;
-  const descId = `${id}-desc`;
   const danger = tone === "danger";
 
   function closePopup() {
@@ -65,11 +63,8 @@ export default function ConfirmPopup({
       ref={popupRef}
       popover="auto"
       role="alertdialog"
-      aria-labelledby={titleId}
-      aria-describedby={description ? descId : undefined}
       className={styles.popup}
       onToggle={(event) => {
-        // ao fechar, descarta um erro antigo
         if (event.newState === "closed") setError(null);
       }}
     >
@@ -80,15 +75,9 @@ export default function ConfirmPopup({
         {icon ?? (danger ? <FaTriangleExclamation /> : <FaCircleQuestion />)}
       </span>
 
-      <h3 id={titleId} className={styles.title}>
-        {title}
-      </h3>
+      <h3 className={styles.title}>{title}</h3>
 
-      {description && (
-        <p id={descId} className={styles.description}>
-          {description}
-        </p>
-      )}
+      {description && <p className={styles.description}>{description}</p>}
 
       {error && (
         <p role="alert" className={styles.error}>
