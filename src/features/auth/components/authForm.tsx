@@ -161,7 +161,6 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   const loginRef = useRef<HTMLDivElement>(null);
   const signupRef = useRef<HTMLDivElement>(null);
 
-  // Altura animada: mede o painel ativo
   useEffect(() => {
     const el = mode === "login" ? loginRef.current : signupRef.current;
     if (!el) return;
@@ -175,7 +174,6 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
   const tabId = (m: Mode) => `${uid}-tab-${m}`;
   const panelId = (m: Mode) => `${uid}-panel-${m}`;
 
-  // limpa o erro de um campo quando a pessoa volta a digitar
   const clear = (field: keyof Values) =>
     setError((e) => ({ ...e, [field]: undefined }));
 
@@ -207,10 +205,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     setError({});
     try {
       if (onSubmit) await onSubmit(formMode, values);
-      else await new Promise((r) => setTimeout(r, 1200)); // só para ver o estado; remova
     } catch (err) {
-      // getErrorText devolve um texto só; escolhi onde mostrá-lo:
-      // login: sob a senha; cadastro: sob o e-mail (ex.: "e-mail já cadastrado")
       const field = formMode === "login" ? "senha" : "email";
       setError({ [field]: getErrorText(err) });
     } finally {
@@ -330,8 +325,6 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               <PasswordField
                 id={`${uid}-signup-senha`}
                 autoComplete="new-password"
-                minLength={8}
-                hint="Use pelo menos 8 caracteres"
                 error={error.senha}
                 onChange={() => clear("senha")}
               />
