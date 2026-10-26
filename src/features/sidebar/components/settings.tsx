@@ -19,7 +19,7 @@ export default function Settings({ user }: SettingsProps) {
 
   async function handleDelete() {
     await SettingsService.deleteUser(user.id);
-    await SettingsService.logOutUser().catch(() => {});
+    await SettingsService.logOutUser();
     router.replace("/");
   }
 
@@ -70,7 +70,7 @@ export default function Settings({ user }: SettingsProps) {
       <ConfirmPopup
         id="confirm-logout"
         title="Sair da conta?"
-        description="Você vai precisar entrar de novo para ver suas tarefas."
+        description="Tem certeza que deseja sair?"
         confirmLabel="Sair"
         onConfirm={handleLogOut}
       />

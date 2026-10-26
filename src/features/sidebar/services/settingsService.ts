@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api";
 
-import { Profile, UpdateProfileValues } from "../types/profile";
+import { UpdateProfileValues } from "../types/profile";
 
 const API_URL = "/api";
 

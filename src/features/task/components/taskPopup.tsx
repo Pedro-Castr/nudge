@@ -24,8 +24,6 @@ export default function TaskPopup({ task }: TaskPopupProps) {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const popupId = `detalhes-${task.id}`;
-
   function startEdit() {
     setNome(task.nome);
     setDescricao(task.descricao ?? "");
@@ -78,7 +76,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
       <button
         type="button"
         className={styles.open}
-        popoverTarget={popupId}
+        popoverTarget={`detalhes-${task.id}`}
         aria-label={`Ver detalhes: ${task.nome}`}
         onClick={() => {
           setEditing(false);
@@ -86,7 +84,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
         }}
       />
 
-      <div id={popupId} popover="auto" className={styles.popup}>
+      <div id={`detalhes-${task.id}`} popover="auto" className={styles.popup}>
         <header className={styles.header}>
           <h3 className={styles.title}>
             {editing ? "Editar tarefa" : task.nome}
@@ -95,7 +93,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
           <button
             type="button"
             className={styles.close}
-            popoverTarget={popupId}
+            popoverTarget={`detalhes-${task.id}`}
             popoverTargetAction="hide"
             aria-label="Fechar"
           >
