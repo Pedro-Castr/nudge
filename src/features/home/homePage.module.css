@@ -146,12 +146,12 @@
   border: 2px dashed rgb(255 255 255 / 0.7);
   border-radius: var(--radius-lg);
   background: rgb(255 255 255 / 0.12);
+  animation: slot-pulse 3.2s ease-in-out infinite;
 }
 
 /* ---------- Passos ---------- */
 .steps {
-  background: var(--brand-200);
-  border-block: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--brand-200) 70%, transparent);
 }
 
 .stepsList {
@@ -197,7 +197,7 @@
   margin-top: var(--space-24);
   padding: var(--space-16) var(--gutter) var(--space-8);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  background: var(--color-surface-inverse);
+  background: color-mix(in srgb, var(--color-surface-inverse) 95%, transparent);
   color: var(--color-text-inverse);
 }
 
@@ -268,13 +268,10 @@
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translate(10px, -2px) rotate(2deg) scale(1.03);
-  }
+@keyframes slot-pulse {
   50% {
-    transform: translate(10px, -8px) rotate(1deg) scale(1.03);
+    border-color: rgb(255 255 255 / 0.95);
+    background: rgb(255 255 255 / 0.22);
   }
 }
 
