@@ -6,6 +6,15 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
+  animation: card-in var(--dur-slow) var(--ease-out) both;
+}
+
+.card:nth-child(2) {
+  animation-delay: 120ms;
+}
+
+.card:nth-child(4) {
+  animation-delay: 240ms;
 }
 
 .handle {
@@ -46,5 +55,24 @@
     var(--shadow-lg),
     0 0 0 2px var(--brand-900);
   transform: translate(10px, -2px) rotate(2deg) scale(1.03);
-  animation: float 3.2s ease-in-out infinite;
+  animation:
+    card-in var(--dur-slow) var(--ease-out) 120ms both,
+    float 3.2s ease-in-out 600ms infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(10px, -2px) rotate(2deg) scale(1.03);
+  }
+  50% {
+    transform: translate(10px, -8px) rotate(1deg) scale(1.03);
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
