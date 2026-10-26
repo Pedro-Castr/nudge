@@ -43,48 +43,53 @@ export default function TaskCompose() {
   }
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit}>
-      <label htmlFor="nova-tarefa-nome" className="visually-hidden">
-        Nova tarefa
-      </label>
-      <input
-        id="nova-tarefa-nome"
-        name="nome"
-        type="text"
-        className={styles.input}
-        placeholder="O que você quer lembrar?"
-        autoComplete="off"
-        required
-        value={nome}
-        onChange={(e) => {
-          setNome(e.target.value);
-          setError(null);
-        }}
-      />
+    <div className={styles.wrapper}>
+      {error && (
+        <p role="alert" className={styles.error}>
+          {error}
+        </p>
+      )}
 
-      <div className={styles.details}>
-        <label htmlFor="nova-tarefa-detalhes" className={styles.detailsLabel}>
-          Detalhes (opcional)
+      <form className={styles.root} onSubmit={handleSubmit}>
+        <label htmlFor="nova-tarefa-nome" className="visually-hidden">
+          Nova tarefa
         </label>
-        <textarea
-          id="nova-tarefa-detalhes"
-          name="descricao"
-          className={styles.textarea}
-          rows={3}
-          placeholder="Algo que ajude você a lembrar depois"
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
+        <input
+          id="nova-tarefa-nome"
+          name="nome"
+          type="text"
+          className={styles.input}
+          placeholder="O que você quer lembrar?"
+          autoComplete="off"
+          value={nome}
+          onChange={(e) => {
+            setNome(e.target.value);
+            setError(null);
+          }}
         />
-      </div>
-
-      <button
-        type="submit"
-        className={styles.add}
-        aria-label="Adicionar tarefa"
-        disabled={submitting}
-      >
-        <FaPlus aria-hidden="true" />
-      </button>
-    </form>
+        <div className={styles.details}>
+          <label htmlFor="nova-tarefa-detalhes" className={styles.detailsLabel}>
+            Detalhes (opcional)
+          </label>
+          <textarea
+            id="nova-tarefa-detalhes"
+            name="descricao"
+            className={styles.textarea}
+            rows={3}
+            placeholder="Algo que ajude você a lembrar depois"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className={styles.add}
+          aria-label="Adicionar tarefa"
+          disabled={submitting}
+        >
+          <FaPlus aria-hidden="true" />
+        </button>
+      </form>
+    </div>
   );
 }
