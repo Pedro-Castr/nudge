@@ -1,4 +1,6 @@
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
+
+import Background from "@/components/background";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -23,7 +25,10 @@ export default function RootLayout({
       data-color="blue"
       className={`${display.variable} ${body.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Background />
+        {children}
+      </body>
     </html>
   );
 }
