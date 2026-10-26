@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useRef, type SubmitEvent } from "react";
+import { useRef, useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
+import { FaXmark } from "react-icons/fa6";
 
 import { getErrorText } from "@/lib/api";
 import SettingsService from "../services/settingsService";
 import { getChanges } from "@/features/sidebar/utils/getChanges";
 import type { Profile } from "@/features/sidebar/types/profile";
 
-import { FaXmark } from "react-icons/fa6";
 import styles from "./editProfilePopup.module.css";
 
 interface EditProfilePopupProps {
@@ -20,44 +20,30 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
   const router = useRouter();
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const titleId = `${id}-title`;
-
-  const [nome, setNome] = useState(user.nome);
-  const [email, setEmail] = useState(user.email);
-  const [senha, setSenha] = useState(user.senha);
-
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  function closePopup() {
-    const popup = popupRef.current;
-
-    if (popup?.matches(":popover-open")) {
-      popup.hidePopover();
-    }
-  }
+  const titleId = `${id}-title`;
 
   async function handleSave(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (saving) return;
+    const data = new FormData(event.currentTarget);
 
     const changes = getChanges(user, {
-      nome: nome.trim(),
-      email: email.trim(),
-      senha: senha?.trim(),
+      nome: String(data.get("nome")).trim(),
+      email: String(data.get("email")).trim(),
+      senha: String(data.get("senha")).trim() || user.senha, // em branco: mantém a atual
     });
 
-    if (Object.keys(changes).length === 0) {
-      return;
-    }
+    if (Object.keys(changes).length === 0) return;
 
     setSaving(true);
     setError(null);
 
     try {
       await SettingsService.updateUser(user.id, changes);
-      closePopup();
+      popupRef.current?.hidePopover();
       router.refresh();
     } catch (err) {
       setError(getErrorText(err));
@@ -79,7 +65,11 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
         Editar perfil
       </h3>
 
-      <form className={styles.form} onSubmit={handleSave}>
+      <form
+        className={styles.form}
+        onSubmit={handleSave}
+        onChange={() => setError(null)}
+      >
         <label className={styles.field}>
           Nome
           <input
@@ -87,12 +77,8 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             type="text"
             name="nome"
             autoComplete="name"
-            defaultValue={user?.nome}
+            defaultValue={user.nome}
             required
-            onChange={(e) => {
-              setNome(e.target.value);
-              setError(null);
-            }}
           />
         </label>
 
@@ -103,12 +89,8 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             type="email"
             name="email"
             autoComplete="email"
-            defaultValue={user?.email}
+            defaultValue={user.email}
             required
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError(null);
-            }}
           />
         </label>
 
@@ -120,10 +102,6 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
             name="senha"
             autoComplete="new-password"
             minLength={8}
-            onChange={(e) => {
-              setSenha(e.target.value);
-              setError(null);
-            }}
           />
           <span className={styles.hint}>
             Deixe em branco para manter a atual. Mínimo de 8 caracteres.
@@ -149,6 +127,7 @@ export default function EditProfilePopup({ id, user }: EditProfilePopupProps) {
           <button
             type="submit"
             className={`${styles.button} ${styles.primary}`}
+            disabled={saving}
           >
             Salvar
           </button>

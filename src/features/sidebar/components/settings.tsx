@@ -1,17 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { getErrorText } from "@/lib/api";
 import SettingsService from "../services/settingsService";
+import ConfirmPopup from "@/components/confirmPopup";
 import type { Profile } from "@/features/sidebar/types/profile";
 import EditProfilePopup from "./editProfilePopup";
 
 import { FaRightFromBracket, FaTrashCan, FaUserPen } from "react-icons/fa6";
 import styles from "./settings.module.css";
-
-const EDIT_PROFILE_ID = "edit-profile-popup";
 
 interface SettingsProps {
   user: Profile;
@@ -20,26 +17,15 @@ interface SettingsProps {
 export default function Settings({ user }: SettingsProps) {
   const router = useRouter();
 
-  const [error, setError] = useState<string | null>(null);
-
   async function handleDelete() {
-    setError(null);
-
-    try {
-      await SettingsService.deleteUser(user.id);
-      router.push("/");
-    } catch (err) {
-      setError(getErrorText(err));
-    }
+    await SettingsService.deleteUser(user.id);
+    await SettingsService.logOutUser().catch(() => {});
+    router.replace("/");
   }
 
   async function handleLogOut() {
-    try {
-      await SettingsService.logOutUser();
-      router.push("/");
-    } catch (err) {
-      setError(getErrorText(err));
-    }
+    await SettingsService.logOutUser();
+    router.replace("/");
   }
 
   return (
@@ -53,7 +39,7 @@ export default function Settings({ user }: SettingsProps) {
           <button
             type="button"
             className={styles.action}
-            popoverTarget={EDIT_PROFILE_ID}
+            popoverTarget="edit-profile-popup"
           >
             <FaUserPen size={18} aria-hidden="true" />
             Editar perfil
@@ -62,7 +48,7 @@ export default function Settings({ user }: SettingsProps) {
           <button
             type="button"
             className={styles.action}
-            onClick={handleLogOut}
+            popoverTarget="confirm-logout"
           >
             <FaRightFromBracket size={18} aria-hidden="true" />
             Sair
@@ -71,21 +57,32 @@ export default function Settings({ user }: SettingsProps) {
           <button
             type="button"
             className={`${styles.action} ${styles.actionDanger}`}
-            onClick={handleDelete}
+            popoverTarget="confirm-delete"
           >
             <FaTrashCan size={18} aria-hidden="true" />
             Excluir conta
           </button>
         </div>
-
-        {error && (
-          <p role="alert" className={styles.popupError}>
-            {error}
-          </p>
-        )}
       </div>
 
-      <EditProfilePopup id={EDIT_PROFILE_ID} user={user} />
+      <EditProfilePopup id="edit-profile-popup" user={user} />
+
+      <ConfirmPopup
+        id="confirm-logout"
+        title="Sair da conta?"
+        description="Você vai precisar entrar de novo para ver suas tarefas."
+        confirmLabel="Sair"
+        onConfirm={handleLogOut}
+      />
+
+      <ConfirmPopup
+        id="confirm-delete"
+        tone="danger"
+        title="Excluir sua conta?"
+        description="Suas tarefas e seus dados serão apagados para sempre. Essa ação não pode ser desfeita."
+        confirmLabel="Excluir conta"
+        onConfirm={handleDelete}
+      />
     </>
   );
 }
