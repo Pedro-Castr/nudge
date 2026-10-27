@@ -1,9 +1,15 @@
-import { FaGear } from "react-icons/fa6";
+import { cookies } from "next/headers";
+
 import SidebarPage from "../sidebar/sidebarPage";
 import TaskCompose from "./components/taskCompose";
 import TaskList from "./components/taskList";
+import Background from "@/components/background";
+
+import { THEMES, ThemeId } from "@/features/sidebar/types/theme";
 import type { Task } from "./types/task";
 import type { Profile } from "../sidebar/types/profile";
+
+import { FaGear } from "react-icons/fa6";
 import styles from "./taskPage.module.css";
 
 interface TaskPageProps {
@@ -11,9 +17,14 @@ interface TaskPageProps {
   user: Profile;
 }
 
-export default function TaskPage({ tasks, user }: TaskPageProps) {
+export default async function TaskPage({ tasks, user }: TaskPageProps) {
+  const saved = (await cookies()).get("nudge-theme")?.value;
+  const color = THEMES.includes(saved as ThemeId) ? saved : "azul";
+
   return (
-    <div className={styles.page}>
+    <div data-color={color} data-theme-root className={styles.page}>
+      <Background />
+
       <header className={styles.header}>
         <button
           type="button"

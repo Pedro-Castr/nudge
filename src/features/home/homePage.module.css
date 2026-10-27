@@ -59,7 +59,7 @@
 
 .title em {
   font-style: normal;
-  color: var(--white);
+  color: var(--color-on-bg-accent);
 }
 
 .lead {

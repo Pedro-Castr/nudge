@@ -1,36 +1,5 @@
-/* =========================================================
-   CORES — Nudge (azul)
-   1) Paleta   2) Tokens de uso (os componentes usam só estes)
-   ========================================================= */
-
 :root {
-  color-scheme: light;
-
-  /* ---------- 1. Paleta ---------- */
-  --brand-50: #f3f7ff;
-  --brand-100: #e6eeff;
-  --brand-200: #cfddfe;
-  --brand-300: #a9c1fc;
-  --brand-400: #7b9cf8;
-  --brand-500: #4d78f2;
-  --brand-600: #2f5be6; /* primária */
-  --brand-700: #2346bd;
-  --brand-800: #1b3590;
-  --brand-900: #142763;
-  --brand-950: #0c1a42; /* tinta */
-
-  --brand-rgb: 47 91 230; /* primária, para anéis e sombras */
-  --brand-shadow-rgb: 20 39 99; /* base das sombras */
-  --brand-overlay-rgb: 12 26 66; /* base do fundo escurecido dos pop-ups */
-
   --white: #ffffff;
-
-  /* ---------- 2. Tokens de uso ---------- */
-
-  /* Fundo da página e texto que fica direto sobre ele */
-  --color-bg: #0096c7;
-  --color-on-bg: var(--brand-950);
-  --color-on-bg-muted: #0b2540;
 
   /* Superfícies (cartões, campos, chips) */
   --color-surface: var(--white);
@@ -41,15 +10,8 @@
 
   /* Texto sobre as superfícies */
   --color-text: var(--brand-950);
-  --color-text-muted: #4a5b80;
-  --color-text-subtle: #54648a;
   --color-text-inverse: var(--white);
   --color-text-link: var(--brand-700);
-
-  /* Bordas */
-  --color-border: #d3e0fb;
-  --color-border-strong: #a9bdea;
-  --color-border-control: #7a90c2; /* contorno de campos */
 
   /* Ação principal */
   --color-primary: var(--brand-600);
@@ -60,10 +22,6 @@
   --color-on-primary: var(--white);
   --color-on-primary-soft: var(--brand-700);
   --primary-rgb: var(--brand-rgb);
-
-  /* Acento discreto */
-  --color-accent: #f5a340;
-  --color-accent-soft: #fdebd3;
 
   /* Estados */
   --color-danger: #d92d3f;
@@ -78,57 +36,7 @@
   --shadow-rgb: var(--brand-shadow-rgb);
 }
 
-/* Manchas de cor da paleta, em movimento quase imperceptível */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -20%;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      45% 50% at 18% 22%,
-      color-mix(in srgb, var(--brand-600) 55%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      40% 45% at 82% 18%,
-      color-mix(in srgb, var(--brand-300) 70%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      50% 55% at 85% 88%,
-      color-mix(in srgb, var(--brand-600) 60%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(40% 45% at 12% 85%, rgb(255 255 255 / 0.3), transparent 70%);
-  animation: fundo-drift 90s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-/* Granulado por cima das manchas, atrás do conteúdo */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: var(--grain-image);
-  background-size: 220px 220px;
-  mix-blend-mode: overlay;
-  opacity: var(--grain-opacity);
-}
-
-@keyframes fundo-drift {
-  from {
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-  to {
-    transform: translate3d(2%, -3%, 0) rotate(4deg) scale(1.08);
-  }
-}
-
-/* ---------- 3. Escalas ---------- */
+/* ---------- Escalas ---------- */
 :root {
   /* Tipografia */
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
@@ -156,16 +64,13 @@ body::after {
 
   --tracking-display: -0.04em;
   --tracking-tight: -0.02em;
-  --tracking-normal: 0;
-  --tracking-caps: 0.08em;
 
   /* Raios */
   --radius-xs: 8px;
-  --radius-sm: 12px; /* botões pequenos, campos */
+  --radius-sm: 12px;
   --radius-md: 16px;
-  --radius-lg: 20px; /* cartões */
-  --radius-xl: 28px; /* pop-ups, painéis */
-  --radius-2xl: 36px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
   --radius-pill: 999px;
 
   /* Espaçamento (base 4px) */
@@ -182,11 +87,9 @@ body::after {
   --space-24: 6rem;
 
   /* Controles e layout */
-  --control-h: 3rem;
-  --control-h-sm: 2.5rem;
   --tap-min: 2.5rem;
   --content-max: 560px;
-  --gutter: 1.5rem; /* 1rem (16px) no celular, ver base */
+  --gutter: 1.5rem;
   /* Ponto de quebra principal: 640px (variáveis não valem em @media) */
 
   /* Sombras */
@@ -206,7 +109,6 @@ body::after {
   /* Movimento */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast: 120ms;
   --dur: 200ms;
   --dur-slow: 360ms;
 
@@ -214,10 +116,9 @@ body::after {
   --z-card-hit: 1;
   --z-card-control: 2;
   --z-sticky: 10;
-  --z-toast: 50;
 }
 
-/* ---------- 4. Reset e base ---------- */
+/* ---------- Reset e base ---------- */
 *,
 *::before,
 *::after {
@@ -240,19 +141,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-/* Ondas sutis no topo de todas as páginas */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 260px;
-  background-image: var(--wave-image);
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
-  mask-image: linear-gradient(to bottom, #000, transparent);
-  pointer-events: none;
-  z-index: -1;
 }
 
 h1,
