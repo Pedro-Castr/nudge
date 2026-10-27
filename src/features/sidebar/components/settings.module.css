@@ -40,7 +40,7 @@
 
 .action svg {
   flex: none;
-  color: var(--color-on-primary-soft);
+  color: var(--brand-900);
   transition: color var(--dur) var(--ease-out);
 }
 
