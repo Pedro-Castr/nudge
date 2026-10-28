@@ -1,4 +1,4 @@
-import styles from "./background.module.css";
+import styles from "./symbol.module.css";
 
 export default function Background() {
   return (

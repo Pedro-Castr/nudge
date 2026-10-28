@@ -27,7 +27,7 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable}`}
       data-color="azul"
     >
-      <body>
+      <body suppressHydrationWarning>
         <Background />
         {children}
       </body>

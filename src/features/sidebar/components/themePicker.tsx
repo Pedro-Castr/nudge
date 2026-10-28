@@ -25,7 +25,7 @@ export default function ThemePicker({ theme }: ThemePickerProps) {
           Temas
         </h2>
         <p id="theme-description" className={styles.description}>
-          Escolha a cor do Nudge que melhor combina com você
+          Personalize o nugde para combinar mais com você
         </p>
       </header>
 

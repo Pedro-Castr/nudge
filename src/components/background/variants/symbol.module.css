@@ -1,0 +1,58 @@
+/* Dois círculos do logo: o pequeno (translúcido) se aproxima do grande */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.small,
+.large {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Pequeno: branco translúcido, no canto superior esquerdo */
+.small {
+  width: 38vmax;
+  height: 38vmax;
+  top: 6vh;
+  left: -10vmax;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgb(255 255 255 / 0.2) 65%,
+    transparent 100%
+  );
+  animation: aproximar 30s ease-in-out infinite alternate;
+}
+
+/* Grande: azul da paleta, no canto inferior direito */
+.large {
+  width: 72vmax;
+  height: 72vmax;
+  right: -22vmax;
+  bottom: -26vmax;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--brand-800) 30%, transparent) 0%,
+    color-mix(in srgb, var(--brand-800) 30%, transparent) 70%,
+    transparent 100%
+  );
+  animation: recuar 30s ease-in-out infinite alternate;
+}
+
+/* Durações diferentes: o ciclo completo quase nunca se repete igual */
+@keyframes aproximar {
+  to {
+    transform: translate3d(7vmax, 4vmax, 0);
+  }
+}
+
+@keyframes recuar {
+  to {
+    transform: translate3d(-4vmax, -3vmax, 0);
+  }
+}

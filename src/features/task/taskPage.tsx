@@ -5,7 +5,13 @@ import TaskCompose from "./components/taskCompose";
 import TaskList from "./components/taskList";
 import Background from "@/components/background";
 
-import { THEMES, ThemeId } from "@/features/sidebar/types/theme";
+import {
+  THEMES,
+  BACKGROUNDS,
+  ThemeId,
+  BackgroundId,
+  isBackgroundId,
+} from "@/features/sidebar/types/theme";
 import type { Task } from "./types/task";
 import type { Profile } from "../sidebar/types/profile";
 
@@ -18,12 +24,17 @@ interface TaskPageProps {
 }
 
 export default async function TaskPage({ tasks, user }: TaskPageProps) {
-  const saved = (await cookies()).get("nudge-theme")?.value;
-  const color = THEMES.includes(saved as ThemeId) ? saved : "azul";
+  const savedColor = (await cookies()).get("nudge-theme")?.value;
+  const color = THEMES.includes(savedColor as ThemeId) ? savedColor : "azul";
+
+  const savedBackground = (await cookies()).get("nudge-background")?.value;
+  const background = isBackgroundId(savedBackground)
+    ? savedBackground
+    : "symbol";
 
   return (
     <div data-color={color} data-theme-root className={styles.page}>
-      <Background />
+      <Background variants={background} />
 
       <header className={styles.header}>
         <button

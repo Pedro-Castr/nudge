@@ -1,0 +1,55 @@
+/* Cada camada é maior que a tela e balança no lugar: as bordas nunca aparecem */
+.wave {
+  position: absolute;
+  bottom: -3vh;
+  left: -10%;
+  width: 120%;
+  will-change: transform;
+  animation: swell ease-in-out infinite alternate;
+}
+
+.wave:nth-child(1) {
+  height: 38vh;
+  color: color-mix(in srgb, white 12%, transparent);
+  animation-duration: 26s;
+}
+
+.wave:nth-child(2) {
+  height: 30vh;
+  scale: -1 1; /* espelhada: a crista fica do lado oposto */
+  color: color-mix(in srgb, var(--brand-500) 16%, transparent);
+  animation-duration: 32s;
+  animation-delay: -9s;
+}
+
+.wave:nth-child(3) {
+  height: 21vh;
+  color: color-mix(in srgb, white 14%, transparent);
+  animation-duration: 22s;
+  animation-delay: -15s;
+}
+
+.clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.wave {
+  max-width: none;
+  position: absolute;
+  bottom: -3vh;
+  left: -10%;
+  width: 120%;
+  will-change: transform;
+  animation: swell ease-in-out infinite alternate;
+}
+
+@keyframes swell {
+  from {
+    transform: translate3d(-5%, 0, 0);
+  }
+  to {
+    transform: translate3d(5%, -2.5vh, 0);
+  }
+}
