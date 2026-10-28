@@ -1,0 +1,138 @@
+.root {
+  --gap: 12px;
+
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.header {
+  padding-right: 3rem;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Miniaturas: desenhos simples com a cor do tema atual */
+.symbol {
+  background-image:
+    radial-gradient(
+      circle at 30% 50%,
+      rgb(255 255 255 / 0.55) 0 16%,
+      transparent 17%
+    ),
+    radial-gradient(
+      circle at 66% 50%,
+      color-mix(in srgb, var(--brand-500) 55%, transparent) 0 28%,
+      transparent 29%
+    );
+}
+
+.stain {
+  background-image:
+    radial-gradient(circle at 20% 25%, rgb(255 255 255 / 0.5), transparent 45%),
+    radial-gradient(
+      circle at 80% 30%,
+      color-mix(in srgb, var(--brand-500) 50%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 55% 85%,
+      color-mix(in srgb, var(--brand-300) 70%, transparent),
+      transparent 50%
+    );
+}
+
+.waves {
+  background-image:
+    radial-gradient(
+      ellipse 90% 45% at 30% 105%,
+      rgb(255 255 255 / 0.4) 0 98%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 90% 45% at 75% 118%,
+      color-mix(in srgb, var(--brand-500) 40%, transparent) 0 98%,
+      transparent 100%
+    );
+}
+
+.name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.option:hover .preview {
+  transform: scale(1.04);
+}
+
+.input:checked + .preview {
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px var(--color-on-bg);
+}
+
+.input:checked ~ .name {
+  color: inherit;
+}
+
+.input:focus-visible + .preview {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 5px;
+}
+
+@media (max-width: 640px) {
+  .root {
+    --gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview {
+    transition: none;
+  }
+
+  .option:hover .preview {
+    transform: none;
+  }
+}

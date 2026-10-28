@@ -1,0 +1,106 @@
+/* Corta tudo o que passar da tela: sem rolagem, mesmo com manchas grandes */
+.clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  left: var(--x);
+  top: var(--y);
+  translate: -50% -50%; /* centraliza a mancha no ponto (--x, --y) */
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--color), transparent);
+  will-change: transform;
+  animation: drift ease-in-out infinite alternate;
+}
+
+/* Cada mancha define só os próprios valores: tamanho, posição, deslocamento, cor e ritmo */
+.blob:nth-child(1) {
+  --size: 34vmax;
+  --x: 15%;
+  --y: 18%;
+  --dx: 8vmax;
+  --dy: 6vmax;
+  --color: rgb(255 255 255 / 0.34);
+  animation-duration: 80s;
+}
+.blob:nth-child(2) {
+  --size: 40vmax;
+  --x: 82%;
+  --y: 12%;
+  --dx: -8vmax;
+  --dy: 9vmax;
+  --color: color-mix(in srgb, var(--brand-500) 30%, transparent);
+  animation-duration: 100s;
+  animation-delay: -20s;
+}
+.blob:nth-child(3) {
+  --size: 38vmax;
+  --x: 50%;
+  --y: 45%;
+  --dx: 7vmax;
+  --dy: -6vmax;
+  --color: color-mix(in srgb, var(--brand-300) 40%, transparent);
+  animation-duration: 96s;
+  animation-delay: -45s;
+}
+.blob:nth-child(4) {
+  --size: 30vmax;
+  --x: 88%;
+  --y: 55%;
+  --dx: -9vmax;
+  --dy: -5vmax;
+  --color: rgb(255 255 255 / 0.3);
+  animation-duration: 72s;
+  animation-delay: -10s;
+}
+.blob:nth-child(5) {
+  --size: 44vmax;
+  --x: 12%;
+  --y: 62%;
+  --dx: 9vmax;
+  --dy: -8vmax;
+  --color: color-mix(in srgb, var(--brand-500) 24%, transparent);
+  animation-duration: 108s;
+  animation-delay: -60s;
+}
+.blob:nth-child(6) {
+  --size: 36vmax;
+  --x: 60%;
+  --y: 88%;
+  --dx: -7vmax;
+  --dy: -7vmax;
+  --color: color-mix(in srgb, var(--brand-300) 36%, transparent);
+  animation-duration: 90s;
+  animation-delay: -30s;
+}
+.blob:nth-child(7) {
+  --size: 42vmax;
+  --x: 94%;
+  --y: 96%;
+  --dx: -6vmax;
+  --dy: -8vmax;
+  --color: color-mix(in srgb, var(--color-on-bg) 10%, transparent);
+  animation-duration: 112s;
+  animation-delay: -70s;
+}
+.blob:nth-child(8) {
+  --size: 28vmax;
+  --x: 35%;
+  --y: 92%;
+  --dx: 8vmax;
+  --dy: -6vmax;
+  --color: rgb(255 255 255 / 0.26);
+  animation-duration: 84s;
+  animation-delay: -5s;
+}
+
+@keyframes drift {
+  to {
+    transform: translate3d(var(--dx), var(--dy), 0) scale(1.08);
+  }
+}

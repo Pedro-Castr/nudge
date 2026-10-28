@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 
 import SettingsService from "../services/settingsService";
+import EditProfilePopup from "./editProfilePopup";
 import ConfirmPopup from "@/components/confirmPopup";
 import type { Profile } from "@/features/sidebar/types/profile";
-import EditProfilePopup from "./editProfilePopup";
+import { clearPreferences } from "../utils/clearPreferences";
 
 import { FaRightFromBracket, FaTrashCan, FaUserPen } from "react-icons/fa6";
 import styles from "./settings.module.css";
@@ -20,11 +21,15 @@ export default function Settings({ user }: SettingsProps) {
   async function handleDelete() {
     await SettingsService.deleteUser(user.id);
     await SettingsService.logOutUser();
+
+    clearPreferences();
     router.replace("/");
   }
 
   async function handleLogOut() {
     await SettingsService.logOutUser();
+
+    clearPreferences();
     router.replace("/");
   }
 
