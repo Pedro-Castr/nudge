@@ -33,13 +33,16 @@ export default function TaskItem({
   const [completing, setCompleting] = useState(false);
 
   async function handleToggle() {
+    console.log(task);
     if (completing) return;
 
     setCompleting(true);
     setError(null);
 
     try {
-      await taskService.updateTask(task.id, { concluida: !task.concluida });
+      await taskService.updateTask(task.id, {
+        completed_at: task.completed_at ? null : new Date(),
+      });
       startTransition(() => router.refresh());
     } catch (err) {
       setError(getErrorText(err));
@@ -48,17 +51,19 @@ export default function TaskItem({
     }
   }
 
-  const completeLabel = task.concluida ? "Reabrir tarefa" : "Concluir tarefa";
+  const completeLabel = task.completed_at
+    ? "Reabrir tarefa"
+    : "Concluir tarefa";
 
   return (
     <li
       ref={sortableRef}
       className={styles.item}
-      data-done={task.concluida ? "" : undefined}
+      data-done={task.completed_at ? "" : undefined}
     >
       <TaskPopup task={task} />
 
-      {!task.concluida && (
+      {!task.completed_at && (
         <button
           type="button"
           className={styles.handle}
@@ -82,7 +87,7 @@ export default function TaskItem({
             onClick={handleToggle}
             disabled={completing || isRefreshing}
           >
-            {task.concluida ? (
+            {task.completed_at ? (
               <FaArrowRotateLeft aria-hidden="true" />
             ) : (
               <FaCheck aria-hidden="true" />

@@ -30,8 +30,8 @@ async function runUpdateQuery(userInputValues: TaskOptions) {
       SET
         nome = $2,
         descricao = $3,
-        concluida = $4,
-        posicao = $5,
+        posicao = $4,
+        completed_at = $5,
         updated_at = timezone('utc', now())
       WHERE
         id = $1
@@ -42,8 +42,8 @@ async function runUpdateQuery(userInputValues: TaskOptions) {
       userInputValues.id,
       userInputValues.nome,
       userInputValues.descricao,
-      userInputValues.concluida,
       userInputValues.posicao,
+      userInputValues.completed_at,
     ],
   });
 

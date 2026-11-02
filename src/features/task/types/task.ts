@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   nome: string;
   descricao: string | null;
-  concluida: boolean;
+  completed_at: Date | null;
   posicao: number;
 }
 
@@ -12,5 +12,5 @@ export interface CreateTaskValues {
 }
 
 export type UpdateTaskValues = Partial<
-  Pick<Task, "nome" | "descricao" | "concluida">
+  Pick<Task, "nome" | "descricao" | "completed_at">
 >;

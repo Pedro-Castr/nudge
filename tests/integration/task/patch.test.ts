@@ -35,8 +35,8 @@ describe("PATCH api/task/[id]", () => {
         user_id: createdUser.id,
         nome: "novoNome",
         descricao: responseBody.descricao,
-        concluida: responseBody.concluida,
         posicao: responseBody.posicao,
+        completed_at: responseBody.completed_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -75,8 +75,8 @@ describe("PATCH api/task/[id]", () => {
         user_id: createdUser.id,
         nome: responseBody.nome,
         descricao: "novaDescricao",
-        concluida: responseBody.concluida,
         posicao: responseBody.posicao,
+        completed_at: responseBody.completed_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -115,8 +115,8 @@ describe("PATCH api/task/[id]", () => {
         user_id: createdUser.id,
         nome: responseBody.nome,
         descricao: null,
-        concluida: responseBody.concluida,
         posicao: responseBody.posicao,
+        completed_at: responseBody.completed_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -142,7 +142,7 @@ describe("PATCH api/task/[id]", () => {
             Cookie: `session_id=${session.token}`,
           },
           body: JSON.stringify({
-            concluida: true,
+            completed_at: new Date().toISOString(),
           }),
         },
       );
@@ -155,8 +155,8 @@ describe("PATCH api/task/[id]", () => {
         user_id: createdUser.id,
         nome: responseBody.nome,
         descricao: responseBody.descricao,
-        concluida: true,
         posicao: responseBody.posicao,
+        completed_at: responseBody.completed_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -164,8 +164,10 @@ describe("PATCH api/task/[id]", () => {
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+      expect(Date.parse(responseBody.completed_at)).not.toBeNaN();
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+      expect(responseBody.completed_at > responseBody.created_at).toBe(true);
     });
   });
 });
