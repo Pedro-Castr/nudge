@@ -36,14 +36,7 @@ export default function HomePage() {
             <FaArrowRight aria-hidden="true" />
           </Link>
 
-          <div className={styles.preview} aria-hidden="true">
-            <ul className={styles.previewList}>
-              <PreviewCard />
-              <PreviewCard dragging />
-              <li className={styles.slot} />
-              <PreviewCard />
-            </ul>
-          </div>
+          <PreviewCard />
         </section>
 
         <section className={styles.steps} aria-label="Como funciona">

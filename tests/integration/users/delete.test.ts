@@ -105,5 +105,59 @@ describe("DELETE api/users/[id]", () => {
         status_code: 404,
       });
     });
+
+    test("Deletar usuário também apaga as tarefas dele", async () => {
+      const createdUser = await orchestrator.createUser({
+        nome: "donodastarefas",
+      });
+      const session = await orchestrator.createSession(createdUser.id);
+
+      await orchestrator.createTask(createdUser.id);
+      await orchestrator.createTask(createdUser.id);
+
+      expect(await orchestrator.countTasksByUser(createdUser.id)).toBe(2);
+
+      const response = await fetch(
+        `http://localhost:3000/api/users/${createdUser.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Cookie: `session_id=${session.token}`,
+          },
+        },
+      );
+
+      expect(response.status).toBe(204);
+
+      expect(await orchestrator.countTasksByUser(createdUser.id)).toBe(0);
+    });
+
+    test("Deletar usuário não apaga as tarefas de outro usuário", async () => {
+      const deletedUser = await orchestrator.createUser({
+        nome: "usuarioremovido",
+      });
+      const keptUser = await orchestrator.createUser({
+        nome: "usuariomantido",
+      });
+      const session = await orchestrator.createSession(deletedUser.id);
+
+      await orchestrator.createTask(deletedUser.id);
+      await orchestrator.createTask(keptUser.id);
+
+      const response = await fetch(
+        `http://localhost:3000/api/users/${deletedUser.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Cookie: `session_id=${session.token}`,
+          },
+        },
+      );
+
+      expect(response.status).toBe(204);
+
+      expect(await orchestrator.countTasksByUser(deletedUser.id)).toBe(0);
+      expect(await orchestrator.countTasksByUser(keptUser.id)).toBe(1);
+    });
   });
 });

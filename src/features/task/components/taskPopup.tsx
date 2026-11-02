@@ -162,11 +162,7 @@ export default function TaskPopup({ task }: TaskPopupProps) {
           </form>
         ) : (
           <>
-            {task.descricao ? (
-              <p className={styles.text}>{task.descricao}</p>
-            ) : (
-              <p className={styles.empty}>Sem descrição.</p>
-            )}
+            {task.descricao && <p className={styles.text}>{task.descricao}</p>}
 
             {error && (
               <p role="alert" className={styles.error}>

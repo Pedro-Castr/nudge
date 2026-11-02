@@ -48,6 +48,12 @@ async function createTask(userId: string, taskObject?: TaskOptions) {
   });
 }
 
+async function countTasksByUser(userId: string) {
+  const results = taskService.findTasksByUserId(userId);
+
+  return (await results).length;
+}
+
 const orchestrator = {
   clearDatabase,
   runPendingMigrations,
@@ -55,6 +61,7 @@ const orchestrator = {
   createSession,
   setSessionExpiresAt,
   createTask,
+  countTasksByUser,
 };
 
 export default orchestrator;
