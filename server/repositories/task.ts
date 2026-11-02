@@ -152,6 +152,22 @@ async function UpdateTaskPositions(userId: string, taskIds: string[]) {
   }
 }
 
+async function deleteExpiredTasks() {
+  const result = await database.query({
+    text: `
+      DELETE FROM tasks
+      WHERE
+        completed_at IS NOT NULL
+      AND
+        completed_at <= NOW() - INTERVAL '10 days'
+      RETURNING
+        id;
+    `,
+  });
+
+  return result.rowCount;
+}
+
 const taskRepository = {
   runInsertQuery,
   runUpdateQuery,
@@ -159,6 +175,7 @@ const taskRepository = {
   findOneById,
   findTasksByUserId,
   UpdateTaskPositions,
+  deleteExpiredTasks,
 };
 
 export default taskRepository;

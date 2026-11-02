@@ -28,6 +28,10 @@ async function remove(id: string) {
   return await taskRepository.runDeleteQuery(id);
 }
 
+async function deleteExpiredTasks() {
+  return await taskRepository.deleteExpiredTasks();
+}
+
 async function findOneById(id: string) {
   return await taskRepository.findOneById(id);
 }
@@ -77,6 +81,7 @@ const taskService = {
   create,
   update,
   remove,
+  deleteExpiredTasks,
   findOneById,
   findTasksByUserId,
   reorder,
