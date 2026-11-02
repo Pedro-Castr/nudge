@@ -39,7 +39,7 @@ export default function TaskList({ tasks }: TaskListProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const pendingTasks = tasks.filter((task) => !task.concluida);
+  const pendingTasks = tasks.filter((task) => !task.completed_at);
 
   const pending = [
     ...orderedIds
@@ -49,7 +49,7 @@ export default function TaskList({ tasks }: TaskListProps) {
     ...pendingTasks.filter((task) => !orderedIds.includes(task.id)),
   ];
 
-  const done = tasks.filter((task) => task.concluida);
+  const done = tasks.filter((task) => task.completed_at);
 
   const pendingCount =
     pending.length === 1 ? "1 pendente" : `${pending.length} pendentes`;

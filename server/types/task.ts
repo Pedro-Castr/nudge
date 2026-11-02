@@ -3,8 +3,8 @@ export type TaskOptions = {
   user_id?: string;
   nome: string;
   descricao?: string;
-  concluida?: boolean;
   posicao?: number;
+  completed_at?: Date;
   created_at?: Date;
   updated_at?: Date;
 };

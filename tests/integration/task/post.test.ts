@@ -32,8 +32,8 @@ describe("POST api/task", () => {
         user_id: createdUser.id,
         nome: "tarefa-teste",
         descricao: "descricao-teste",
-        concluida: false,
         posicao: 1,
+        completed_at: null,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -75,8 +75,8 @@ describe("POST api/task", () => {
         user_id: createdUser.id,
         nome: "tarefa-teste",
         descricao: null,
-        concluida: false,
         posicao: 1,
+        completed_at: null,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -157,8 +157,8 @@ describe("POST api/task", () => {
         user_id: createdUser.id,
         nome: "tarefa 2",
         descricao: null,
-        concluida: false,
         posicao: 2,
+        completed_at: null,
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
       });

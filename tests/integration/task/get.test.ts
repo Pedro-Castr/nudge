@@ -77,8 +77,8 @@ describe("GET api/task/[id]", () => {
         user_id: createdUser.id,
         nome: responseBody.nome,
         descricao: responseBody.descricao,
-        concluida: responseBody.concluida,
         posicao: responseBody.posicao,
+        completed_at: responseBody.completed_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -132,8 +132,8 @@ describe("GET api/task", () => {
         user_id: createdUser.id,
         nome: responseBody[0].nome,
         descricao: responseBody[0].descricao,
-        concluida: responseBody[0].concluida,
         posicao: responseBody[0].posicao,
+        completed_at: responseBody[0].completed_at,
         created_at: responseBody[0].created_at,
         updated_at: responseBody[0].updated_at,
       });
@@ -167,8 +167,8 @@ describe("GET api/task", () => {
         user_id: createdUser.id,
         nome: responseBody[0].nome,
         descricao: responseBody[0].descricao,
-        concluida: responseBody[0].concluida,
         posicao: responseBody[0].posicao,
+        completed_at: responseBody[0].completed_at,
         created_at: responseBody[0].created_at,
         updated_at: responseBody[0].updated_at,
       });
@@ -182,8 +182,8 @@ describe("GET api/task", () => {
         user_id: createdUser.id,
         nome: responseBody[1].nome,
         descricao: responseBody[1].descricao,
-        concluida: responseBody[1].concluida,
         posicao: responseBody[1].posicao,
+        completed_at: responseBody[1].completed_at,
         created_at: responseBody[1].created_at,
         updated_at: responseBody[1].updated_at,
       });
