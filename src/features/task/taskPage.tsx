@@ -7,9 +7,7 @@ import Background from "@/components/background";
 
 import {
   THEMES,
-  BACKGROUNDS,
   ThemeId,
-  BackgroundId,
   isBackgroundId,
 } from "@/features/sidebar/types/theme";
 import type { Task } from "./types/task";
