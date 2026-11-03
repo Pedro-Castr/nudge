@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import SidebarPage from "../sidebar/sidebarPage";
+import TaskGreeting from "./components/taskGreeting";
 import TaskCompose from "./components/taskCompose";
 import TaskList from "./components/taskList";
 import Background from "@/components/background";
@@ -10,6 +11,9 @@ import {
   ThemeId,
   isBackgroundId,
 } from "@/features/sidebar/types/theme";
+import { tasksMokup } from "./utils/random";
+import { pickRandom } from "./utils/random";
+import { pickGreeting } from "./utils/greetings";
 import type { Task } from "./types/task";
 import type { Profile } from "../sidebar/types/profile";
 
@@ -46,7 +50,8 @@ export default async function TaskPage({ tasks, user }: TaskPageProps) {
       </header>
 
       <main className={styles.main}>
-        <TaskCompose />
+        <TaskGreeting parts={pickGreeting(user.nome)} />
+        <TaskCompose placeholder={pickRandom(tasksMokup)} />
         <TaskList tasks={tasks} />
       </main>
 

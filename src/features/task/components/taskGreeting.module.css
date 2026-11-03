@@ -1,0 +1,61 @@
+.greeting {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+  padding-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-wrap: balance;
+  color: #fff;
+}
+
+.highlight {
+  color: var(--brand-900);
+}
+
+.pending {
+  color: transparent;
+}
+
+.caret {
+  box-shadow: 0.07em 0 0 0 #fff;
+}
+
+.caretDone {
+  animation: caretFade 0.4s ease 1s forwards;
+}
+
+@keyframes caretFade {
+  to {
+    box-shadow: 0.07em 0 0 0 transparent;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pending {
+    color: inherit;
+  }
+
+  .caret {
+    box-shadow: none;
+  }
+
+  .caretDone {
+    animation: none;
+  }
+}
