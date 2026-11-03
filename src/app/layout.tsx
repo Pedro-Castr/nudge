@@ -1,8 +1,17 @@
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import type { Metadata } from "next";
 
 import Background from "@/components/background";
 import "@/app/styles/globals.css";
 import "@/app/styles/themes.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Nudge",
+    template: "%s | Nudge",
+  },
+  description: "Um empurrão para você nunca esquecer.",
+};
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],

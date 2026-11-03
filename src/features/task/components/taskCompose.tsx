@@ -8,12 +8,18 @@ import { getErrorText } from "@/lib/api";
 import taskService from "@/features/task/services/taskService";
 import styles from "./taskCompose.module.css";
 
-export default function TaskCompose() {
+interface TaskComposeProps {
+  placeholder: string | undefined;
+}
+
+export default function TaskCompose({ placeholder }: TaskComposeProps) {
   const router = useRouter();
   const nomeRef = useRef<HTMLInputElement>(null);
 
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
+
+  const [taskPlaceholder] = useState(placeholder ?? "Anotar nova tarefa...");
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +65,7 @@ export default function TaskCompose() {
           name="nome"
           type="text"
           className={styles.input}
-          placeholder="O que você quer lembrar?"
+          placeholder={taskPlaceholder}
           autoComplete="off"
           value={nome}
           onChange={(e) => {
