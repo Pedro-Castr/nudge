@@ -90,12 +90,20 @@ export default function TaskList({ tasks }: TaskListProps) {
     >
       {tasks.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyMark} aria-hidden="true">
-            <Logo size={32} showWordmark={false} />
-          </span>
-          <p className={styles.emptyText}>
-            Nada por aqui. Anote sua primeira tarefa.
-          </p>
+          <svg
+            className={styles.mark}
+            viewBox="5 8 32 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle className={styles.dot} cx="12" cy="20" r="5" />
+            <circle className={styles.ring} cx="25" cy="20" r="10" />
+          </svg>
+
+          <div className={styles.copy}>
+            <h2 className={styles.title}>Nada por aqui.</h2>
+            <p className={styles.text}>Anote sua primeira tarefa.</p>
+          </div>
         </div>
       ) : (
         <div className={styles.root}>

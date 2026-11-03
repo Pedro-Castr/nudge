@@ -32,28 +32,62 @@
 .empty {
   width: 100%;
   max-width: var(--content-max);
+  min-height: 50dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-12) var(--space-6);
-  border: 2px dashed rgb(255 255 255 / 0.6);
-  border-radius: var(--radius-xl);
+  justify-content: center;
+  gap: var(--space-6);
   text-align: center;
 }
 
-.emptyMark {
-  display: grid;
-  place-items: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: var(--radius-lg);
-  background: rgb(255 255 255 / 0.25);
+.mark {
+  width: clamp(14rem, 55vw, 24rem);
+  height: auto;
+  overflow: visible;
 }
 
-.emptyText {
-  font-size: var(--text-md);
+.dot {
+  fill: rgb(255 255 255 / 0.35);
+}
+
+.ring {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.9);
+  stroke-width: 6px;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 6s ease-in-out infinite;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--color-on-bg);
+}
+
+.text {
+  margin: 0;
+  font-size: var(--text-md);
+  color: rgb(255 255 255 / 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+    opacity: 0.9;
+  }
 }
 
 /* ---------- Erro ao reordenar ---------- */
@@ -135,5 +169,17 @@
   from {
     opacity: 0;
     transform: translateY(6px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.025);
   }
 }
