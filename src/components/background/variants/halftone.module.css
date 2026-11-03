@@ -1,0 +1,64 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-bg);
+}
+
+.dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgb(255 255 255 / 0.32) 1.4px,
+    transparent 1.6px
+  );
+  background-size: 26px 26px;
+  /* faixa de luz diagonal que se desloca devagar: os pontos "aparecem" e somem em onda */
+  -webkit-mask-image: linear-gradient(
+    115deg,
+    transparent 20%,
+    #000 50%,
+    transparent 80%
+  );
+  mask-image: linear-gradient(
+    115deg,
+    transparent 20%,
+    #000 50%,
+    transparent 80%
+  );
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  animation: sweep 14s ease-in-out infinite alternate;
+}
+
+.dotsLarge {
+  background-image: radial-gradient(
+    rgb(var(--brand-overlay-rgb) / 0.22) 3px,
+    transparent 3.4px
+  );
+  background-size: 52px 52px;
+  background-position: 13px 13px;
+  animation-duration: 18s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes sweep {
+  from {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+  to {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots {
+    animation: none;
+    -webkit-mask-position: 50% 0;
+    mask-position: 50% 0;
+  }
+}

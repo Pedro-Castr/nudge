@@ -64,6 +64,7 @@ export default function TaskCompose({ placeholder }: TaskComposeProps) {
           id="nova-tarefa-nome"
           name="nome"
           type="text"
+          ref={nomeRef}
           className={styles.input}
           placeholder={taskPlaceholder}
           autoComplete="off"

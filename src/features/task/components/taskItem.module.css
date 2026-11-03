@@ -30,8 +30,8 @@
 
 .item[data-dnd-dragging] .handle {
   cursor: grabbing;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
+  background: var(--brand-200);
+  color: var(--brand-400);
 }
 
 /* Concluído: cartão chapado, sem alça, nome riscado e esmaecido */
@@ -73,8 +73,7 @@
 }
 
 .handle:hover {
-  background: var(--color-surface-3);
-  color: var(--color-primary);
+  background: var(--brand-100);
 }
 
 .handle:focus-visible {
@@ -120,8 +119,8 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-md);
-  background: var(--color-primary-soft);
-  color: var(--color-on-primary-soft);
+  background: var(--color-surface-2);
+  color: var(--brand-600);
   font-size: var(--text-base);
   transition:
     background var(--dur) var(--ease-out),
@@ -130,8 +129,8 @@
 }
 
 .complete:hover:not(:disabled) {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-600);
+  color: var(--brand-100);
   transform: scale(1.06);
 }
 
@@ -150,8 +149,8 @@
 }
 
 .item[data-done] .complete:hover:not(:disabled) {
-  background: var(--color-primary-soft-hover);
-  color: var(--color-on-primary-soft);
+  background: var(--brand-200);
+  color: var(--brand-600);
 }
 
 /* ---------- Erro do cartão ---------- */

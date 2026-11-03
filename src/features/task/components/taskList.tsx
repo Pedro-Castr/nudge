@@ -51,9 +51,6 @@ export default function TaskList({ tasks }: TaskListProps) {
 
   const done = tasks.filter((task) => task.completed_at);
 
-  const pendingCount =
-    pending.length === 1 ? "1 pendente" : `${pending.length} pendentes`;
-
   return (
     <DragDropProvider
       onDragEnd={async (event) => {
@@ -93,12 +90,20 @@ export default function TaskList({ tasks }: TaskListProps) {
     >
       {tasks.length === 0 ? (
         <div className={styles.empty}>
-          <span className={styles.emptyMark} aria-hidden="true">
-            <Logo size={32} showWordmark={false} />
-          </span>
-          <p className={styles.emptyText}>
-            Nada por aqui. Anote sua primeira tarefa.
-          </p>
+          <svg
+            className={styles.mark}
+            viewBox="5 8 32 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle className={styles.dot} cx="12" cy="20" r="5" />
+            <circle className={styles.ring} cx="25" cy="20" r="10" />
+          </svg>
+
+          <div className={styles.copy}>
+            <h2 className={styles.title}>Nada por aqui.</h2>
+            <p className={styles.text}>Anote sua primeira tarefa.</p>
+          </div>
         </div>
       ) : (
         <div className={styles.root}>
@@ -121,8 +126,6 @@ export default function TaskList({ tasks }: TaskListProps) {
                   />
                 ))}
               </ol>
-
-              <p className={styles.count}>{pendingCount}</p>
             </section>
           )}
 
@@ -130,10 +133,13 @@ export default function TaskList({ tasks }: TaskListProps) {
             <details className={styles.done}>
               <summary className={styles.summary}>
                 <span className={styles.summaryLabel}>Concluídas</span>
-                <span className={styles.badge}>{done.length}</span>
                 <FaChevronDown className={styles.chevron} aria-hidden="true" />
               </summary>
 
+              <p className={styles.doneText}>
+                Suas tarefas concluídas serão excluídas automaticamente após 10
+                dias.
+              </p>
               <ul className={`${styles.items} ${styles.doneBody}`}>
                 {done.map((task) => (
                   <TaskItem key={task.id} task={task} />
