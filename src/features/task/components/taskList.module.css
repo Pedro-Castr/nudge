@@ -28,14 +28,6 @@
   opacity: 0.7;
 }
 
-.count {
-  align-self: flex-end;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-on-bg-muted);
-}
-
 /* ---------- Estado vazio ---------- */
 .empty {
   width: 100%;
@@ -115,18 +107,6 @@
   font-weight: var(--weight-semibold);
 }
 
-.badge {
-  min-width: 1.5rem;
-  padding: 0 var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface-3);
-  color: var(--color-on-primary-soft);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  line-height: 1.5rem;
-  text-align: center;
-}
-
 .chevron {
   margin-left: auto;
   font-size: var(--text-sm);
@@ -140,6 +120,15 @@
 .doneBody {
   margin-top: var(--space-3);
   animation: rise var(--dur-slow) var(--ease-out);
+}
+
+.doneText {
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-on-bg-muted);
+  margin: 5px;
 }
 
 @keyframes rise {

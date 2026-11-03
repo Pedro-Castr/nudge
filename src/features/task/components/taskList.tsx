@@ -51,9 +51,6 @@ export default function TaskList({ tasks }: TaskListProps) {
 
   const done = tasks.filter((task) => task.completed_at);
 
-  const pendingCount =
-    pending.length === 1 ? "1 pendente" : `${pending.length} pendentes`;
-
   return (
     <DragDropProvider
       onDragEnd={async (event) => {
@@ -121,8 +118,6 @@ export default function TaskList({ tasks }: TaskListProps) {
                   />
                 ))}
               </ol>
-
-              <p className={styles.count}>{pendingCount}</p>
             </section>
           )}
 
@@ -130,10 +125,13 @@ export default function TaskList({ tasks }: TaskListProps) {
             <details className={styles.done}>
               <summary className={styles.summary}>
                 <span className={styles.summaryLabel}>Concluídas</span>
-                <span className={styles.badge}>{done.length}</span>
                 <FaChevronDown className={styles.chevron} aria-hidden="true" />
               </summary>
 
+              <p className={styles.doneText}>
+                Suas tarefas concluídas serão excluídas automaticamente após 10
+                dias.
+              </p>
               <ul className={`${styles.items} ${styles.doneBody}`}>
                 {done.map((task) => (
                   <TaskItem key={task.id} task={task} />
