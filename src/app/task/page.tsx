@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/features/auth/services/getCurrentUser";
 import taskService from "@server/services/task";
 import TaskPage from "@/features/task/taskPage";
+
+export const metadata: Metadata = {
+  title: "Tarefas",
+};
 
 export default async function Page() {
   const user = await getCurrentUser();
