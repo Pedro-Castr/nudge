@@ -9,7 +9,14 @@ export const THEMES = [
   "grafite",
 ] as const;
 
-export const BACKGROUNDS = ["symbol", "stain", "waves"] as const;
+export const BACKGROUNDS = [
+  "symbol",
+  "stain",
+  "waves",
+  "halftone",
+  "paper",
+  "topo",
+] as const;
 
 export type ThemeId = (typeof THEMES)[number];
 

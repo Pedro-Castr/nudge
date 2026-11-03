@@ -8,6 +8,9 @@ const LABELS: Record<BackgroundId, string> = {
   symbol: "Símbolo",
   stain: "Manchas",
   waves: "Ondas",
+  halftone: "Pontilhado",
+  paper: "Granulado",
+  topo: "Topográfico",
 };
 
 function saveBackground(background: BackgroundId) {
