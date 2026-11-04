@@ -100,8 +100,8 @@ export default function HomePage() {
           <div className={styles.footerLegal}>
             <span>© Nudge</span>
             <nav className={styles.footerLinks} aria-label="Links legais">
-              <Link href="/termos">Termos</Link>
-              <Link href="/privacidade">Privacidade</Link>
+              <Link href="/terms">Termos</Link>
+              <Link href="privacy">Privacidade</Link>
             </nav>
           </div>
         </div>
