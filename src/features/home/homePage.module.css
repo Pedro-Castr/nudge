@@ -122,6 +122,7 @@
 }
 
 /* ---------- Passos ---------- */
+/* ---------- Passos ---------- */
 .steps {
   background: color-mix(in srgb, var(--brand-200) 70%, transparent);
 }
@@ -162,6 +163,82 @@
   color: var(--color-on-primary-soft);
   font-family: var(--font-display);
   font-weight: var(--weight-bold);
+}
+
+/* ---------- Blocos de texto ---------- */
+.block {
+  max-width: 760px;
+  margin: var(--space-6) auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  box-shadow:
+    inset 0 0 0 1px var(--color-border),
+    var(--shadow-xs);
+}
+
+.blockTitle {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-on-bg);
+  text-wrap: balance;
+}
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--color-on-bg-muted);
+}
+
+.term {
+  font-style: normal;
+  font-weight: var(--weight-bold);
+  color: var(--color-on-bg-accent);
+}
+
+/* ---------- Benefícios ---------- */
+.benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+/* ---------- História ---------- */
+.story {
+  margin: 0;
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow:
+    inset 0 0 0 1px var(--color-border),
+    var(--shadow-xs);
+}
+
+.story blockquote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--text-md);
+  line-height: 1.65;
+  color: var(--color-text);
+}
+
+.story figcaption {
+  margin-top: var(--space-6);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
 }
 
 /* ---------- Rodapé ---------- */
@@ -232,6 +309,28 @@
   outline-color: var(--brand-300);
 }
 
+.credit {
+  color: var(--brand-200);
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.credit:hover {
+  color: var(--color-text-inverse);
+}
+
+.footerLegal {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--brand-300);
+}
+
 /* ---------- Animações ---------- */
 @keyframes rise {
   from {
@@ -240,11 +339,61 @@
   }
 }
 
+@media (max-width: 800px) {
+  .block {
+    margin-inline: var(--gutter);
+  }
+}
+
+.blockTitle {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.term {
+  font-style: normal;
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+}
+
+/* a história já está num cartão: no bloco dela, o painel externo some */
+.block:has(.story) {
+  background: none;
+  box-shadow: none;
+  padding-block: 0;
+}
+
+.stepsInner {
+  padding: var(--space-10) var(--gutter);
+  gap: var(--space-6);
+}
+
+.stepsInner .blockTitle {
+  color: var(--color-on-bg);
+}
+
 /* ---------- Celular ---------- */
 @media (max-width: 640px) {
   .hero {
     padding-top: var(--space-10);
     padding-bottom: var(--space-16);
+  }
+
+  .block {
+    padding-block: var(--space-12);
   }
 
   .stepsList {
@@ -255,6 +404,14 @@
 
   .step {
     justify-content: flex-start;
+  }
+
+  .benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .story {
+    padding: var(--space-6);
   }
 
   .footer {
