@@ -188,8 +188,8 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
               />
               <p className={styles.legal}>
                 Ao criar sua conta, você concorda com os{" "}
-                <Link href="/termos">Termos de uso</Link> e a{" "}
-                <Link href="/privacidade">Política de privacidade</Link>.
+                <Link href="/terms">Termos de uso</Link> e a{" "}
+                <Link href="/privacy">Política de privacidade</Link>.
               </p>
             </form>
           </div>
